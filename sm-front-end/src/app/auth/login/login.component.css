@@ -1,0 +1,17 @@
+.bg-image {
+    background-image: url(src/assets/pexels-chait-goli-2031727.jpg); 
+    background-position: center center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-size: cover;
+    background-color: black; 
+    position: absolute; top: 0; left: 0; height: 100%; width: 100%;
+}
+
+.card{
+    max-width: 400px;
+    align-content: center;
+    margin-top: auto;
+    margin-bottom: auto;
+    background-color: rgba(0, 0, 0, 0.700) !important;
+}
