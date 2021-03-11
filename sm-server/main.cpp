@@ -48,47 +48,49 @@ class HomeEndpoint
       Routes::Put(router, "/user", Routes::bind(&HomeEndpoint::putUser, this));
     }
 
+    void configReponse(Http::ResponseWriter* response) 
+    {
+      response->headers().add<Pistache::Http::Header::AccessControlAllowOrigin>("*");
+      response->headers().add<Pistache::Http::Header::ContentType>("application/json");
+    }
+
     void getLight(const Rest::Request& request, Http::ResponseWriter response)
     { 
-      vector<string> lights;
+      string result = "[";
       list<LightBulb>::iterator it;
       for (it = Home::home->lightList.begin(); it != Home::home->lightList.end(); ++it)
       { 
-        cout << it->serialize() << endl;
-        lights.push_back(it->serialize());
+        result = result + it->serialize();
+        result = result + ",";
       }
-      
-      Document doc;
-      doc.SetArray();
-      Document::AllocatorType& allocator = doc.GetAllocator();
-      for (auto it = lights.begin(); it != lights.end(); it++)
-      {
-        Value n((*it).c_str(), allocator);
-        doc.PushBack(n, allocator);
-      }
-
-      StringBuffer buffer;
-      buffer.Clear();
-      Writer<StringBuffer> writer(buffer);
-      doc.Accept(writer);
-      
-      string result = buffer.GetString();
-      
-      result.erase(remove(result.begin(), result.end(), '\\'), result.end());
-      
+      result = result.substr(0, result.size()-1);
+      result = result + "]";
+    
+      configReponse(&response);
       response.send(Http::Code::Ok, result);
     }
 
     void getDoor(const Rest::Request& request, Http::ResponseWriter response)
     {   
-      auto door = next(Home::home->doorList.begin(),0);
-      
-      response.send(Http::Code::Ok, door->location);
+      string result = "[";
+      list<Door>::iterator it;
+      for (it = Home::home->doorList.begin(); it != Home::home->doorList.end(); ++it)
+      { 
+        result = result + it->serialize();
+        result = result + ",";
+      }
+      result = result.substr(0, result.size()-1);
+      result = result + "]";
+    
+      configReponse(&response);
+      response.send(Http::Code::Ok, result);
     }
 
     void getCamera(const Rest::Request& request, Http::ResponseWriter response)
-    {   
-      response.send(Http::Code::Ok, "Camara");
+    { 
+      string result = Home::home->camera.serialize();
+      configReponse(&response);
+      response.send(Http::Code::Ok, result);
     }
 
     void getUser(const Rest::Request& request, Http::ResponseWriter response)
