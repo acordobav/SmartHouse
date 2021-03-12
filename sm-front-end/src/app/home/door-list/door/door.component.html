@@ -1,0 +1,25 @@
+<hr class="my-2">
+<div class="row justify-content-left">
+    <div class="col-auto content_center">
+        <div class="content_center">
+            <span class="icon" *ngIf="door.state"><i class="fas fa-2x fa-door-open"></i></span>
+            <span class="icon" *ngIf="!door.state"><i class="fas fa-2x fa-door-closed"></i></span>
+        </div>
+    </div>
+    <div class="col">
+        <div class="row">
+            <div class="col">
+                <b>{{ door.location }}</b>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col">
+                Estado:
+            </div>
+            <div class="col font-weight-bold">
+                <div style="color: red" *ngIf="!door.state">Cerrado</div>
+                <div style="color: green" *ngIf="door.state">Abierto</div>
+            </div>
+        </div>
+    </div>
+</div>

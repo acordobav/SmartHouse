@@ -1,0 +1,14 @@
+span {
+    height: 100%;
+}
+
+.icon{
+    background-color:white;
+    color: rgb(0, 123, 255);
+}
+
+.content_center {
+    display: flex;
+    justify-content: center;
+    align-items: center; 
+}
