@@ -1,1 +1,15 @@
 /* You can add global styles to this file, and also import other style files */
+.icon-blue{
+    background-color:white;
+    color: rgb(0, 123, 255);
+}
+
+.content_center {
+    display: flex;
+    justify-content: center;
+    align-items: center; 
+}
+
+.hover:hover {
+    cursor: pointer;
+}

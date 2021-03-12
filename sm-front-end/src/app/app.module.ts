@@ -13,6 +13,8 @@ import { LoginFormComponent } from './auth/login/login-form/login-form.component
 import { RegisterFormComponent } from './auth/login/register-form/register-form.component';
 import { DoorListComponent } from './home/door-list/door-list.component';
 import { DoorComponent } from './home/door-list/door/door.component';
+import { LightBulbListComponent } from './home/light-bulb-list/light-bulb-list.component';
+import { LightBulbComponent } from './home/light-bulb-list/light-bulb/light-bulb.component';
 
 @NgModule({
   declarations: [
@@ -24,6 +26,8 @@ import { DoorComponent } from './home/door-list/door/door.component';
     RegisterFormComponent,
     DoorListComponent,
     DoorComponent,
+    LightBulbListComponent,
+    LightBulbComponent,
   ],
   imports: [
     BrowserModule,

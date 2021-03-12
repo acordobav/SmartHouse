@@ -1,0 +1,22 @@
+<hr class="my-2">
+<div class="row justify-content-left">
+    <div class="col-auto content_center">
+        <div class="hover" (click)="changeState()">
+            <span style="color: #e3d952" class="icon" *ngIf="lightBulb.state"><i class="far fa-2x fa-lightbulb"></i></span>
+            <span class="icon" *ngIf="!lightBulb.state"><i class="far fa-2x fa-lightbulb"></i></span>
+        </div>
+    </div>
+    <div class="col">
+        <div class="row">
+            <div class="col">
+                <b>{{ lightBulb.location }}</b>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col font-weight-bold">
+                <div style="color: red" *ngIf="!lightBulb.state">Apagado</div>
+                <div style="color: green" *ngIf="lightBulb.state">Encendido</div>
+            </div>
+        </div>
+    </div>
+</div>

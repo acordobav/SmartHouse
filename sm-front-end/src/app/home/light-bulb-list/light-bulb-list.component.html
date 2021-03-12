@@ -1,0 +1,9 @@
+<div class="m-3">
+    <div class="h4 hover" (click)="collapse.toggle()" [attr.aria-expanded]="!isCollapsed">
+        <b>Luces</b>
+    </div>
+    <small class="form-text text-muted">Presione sobre el icono de la bombilla para cambiar el estado.</small>
+    <div #collapse="ngbCollapse" [(ngbCollapse)]="isCollapsed">
+        <app-light-bulb *ngFor="let lightBulb of lightBulbList" [lightBulb]="lightBulb"></app-light-bulb>
+    </div>
+</div>

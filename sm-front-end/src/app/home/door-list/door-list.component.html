@@ -1,5 +1,9 @@
 <div class="m-3">
-    <div class="h4"><b>Puertas</b></div>
-    <app-door *ngFor="let door of doors" [door]="door"></app-door>
-
+    <div class="h4 hover" (click)="collapse.toggle()" [attr.aria-expanded]="!isCollapsed">
+        <b>Puertas</b>
+    </div>
+    <small class="form-text text-muted">En esta sección puede observar el estado de las puertas.</small>
+    <div #collapse="ngbCollapse" [(ngbCollapse)]="isCollapsed">
+        <app-door *ngFor="let door of doors" [door]="door"></app-door>
+    </div>
 </div>
