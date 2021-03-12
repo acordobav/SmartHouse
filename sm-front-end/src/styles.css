@@ -1,7 +1,16 @@
 /* You can add global styles to this file, and also import other style files */
+:root {
+    --aux-color: #1509DE;
+    --primary-color: #007bff;
+    --bulb-color: #F5E04C;
+}
+
+.bg-aux {
+    background-color: var(--aux-color);
+}
+
 .icon-blue{
-    background-color:white;
-    color: rgb(0, 123, 255);
+    color:  var(--primary-color);
 }
 
 .content_center {

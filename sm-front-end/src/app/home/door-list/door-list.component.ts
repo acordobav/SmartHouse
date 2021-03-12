@@ -1,4 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
+import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { Subscription } from 'rxjs';
 import { Door } from 'src/app/models/door.model';
 import { DoorService } from './door.service';
@@ -10,10 +11,10 @@ import { DoorService } from './door.service';
 })
 export class DoorListComponent implements OnInit, OnDestroy {
   private subDoor: Subscription;
-  public isCollapsed = true;
   public doors: Door[] = [];
 
-  constructor(private doorService: DoorService) { }
+  constructor(private doorService: DoorService,
+    public activeModal: NgbActiveModal) { }
 
   ngOnInit(): void {
     this.subDoor = this.doorService.doors.subscribe(

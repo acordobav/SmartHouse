@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
+import { HttpClientModule } from '@angular/common/http';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -15,6 +15,7 @@ import { DoorListComponent } from './home/door-list/door-list.component';
 import { DoorComponent } from './home/door-list/door/door.component';
 import { LightBulbListComponent } from './home/light-bulb-list/light-bulb-list.component';
 import { LightBulbComponent } from './home/light-bulb-list/light-bulb/light-bulb.component';
+import { NavbarComponent } from './home/navbar/navbar.component';
 
 @NgModule({
   declarations: [
@@ -28,6 +29,7 @@ import { LightBulbComponent } from './home/light-bulb-list/light-bulb/light-bulb
     DoorComponent,
     LightBulbListComponent,
     LightBulbComponent,
+    NavbarComponent,
   ],
   imports: [
     BrowserModule,

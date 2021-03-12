@@ -1,4 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
+import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { Subscription } from 'rxjs';
 import { LightBulb } from 'src/app/models/light-bulb.model';
 import { LightBulbService } from './light-bulb.service';
@@ -11,9 +12,9 @@ import { LightBulbService } from './light-bulb.service';
 export class LightBulbListComponent implements OnInit, OnDestroy {
   private subLightBulb: Subscription;
   public lightBulbList: LightBulb[] = [];
-  public isCollapsed = true;
 
-  constructor(private lightBulbService: LightBulbService) { }
+  constructor(private lightBulbService: LightBulbService,
+    public activeModal: NgbActiveModal) { }
 
   ngOnInit(): void {
     this.subLightBulb = this.lightBulbService.lightBulbs.subscribe(
@@ -32,7 +33,7 @@ export class LightBulbListComponent implements OnInit, OnDestroy {
   turnOn() {
     this.lightBulbService.turnOn();
   }
-  
+
   turnOff() {
     this.lightBulbService.turnOff();
   }

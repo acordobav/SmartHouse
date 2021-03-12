@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { Title } from '@angular/platform-browser';
+import { AuthService } from './auth/auth.service';
 
 @Component({
   selector: 'app-root',
@@ -7,7 +8,10 @@ import { Title } from '@angular/platform-browser';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
-  constructor(private titleService: Title) {
+  constructor(
+    private authService: AuthService,
+    private titleService: Title) {
+    this.authService.autoLogin();
     this.titleService.setTitle('Smart House');
   }
 }
