@@ -1,9 +1,23 @@
 <div class="m-3">
-    <div class="h4 hover" (click)="collapse.toggle()" [attr.aria-expanded]="!isCollapsed">
-        <b>Luces</b>
+    <div class="hover" (click)="collapse.toggle()" [attr.aria-expanded]="!isCollapsed">
+        <div class="h4">
+            <div class="row">
+                <div class="col">
+                    <b>Luces</b>
+                </div>
+            </div>
+        </div>
+        <small class="form-text text-muted">Presione sobre el icono de la bombilla para cambiar el estado.</small>
     </div>
-    <small class="form-text text-muted">Presione sobre el icono de la bombilla para cambiar el estado.</small>
     <div #collapse="ngbCollapse" [(ngbCollapse)]="isCollapsed">
         <app-light-bulb *ngFor="let lightBulb of lightBulbList" [lightBulb]="lightBulb"></app-light-bulb>
+        <div class="row mt-1">
+            <div class="col m-1">
+                <button class="btn btn-success btn-block" (click)="turnOn()">Encender todo</button>
+            </div>
+            <div class="col m-1">
+                <button class="btn btn-danger btn-block" (click)="turnOff()">Apagar todo</button>
+            </div>
+        </div>
     </div>
 </div>

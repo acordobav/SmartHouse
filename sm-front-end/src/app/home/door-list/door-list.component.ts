@@ -10,7 +10,7 @@ import { DoorService } from './door.service';
 })
 export class DoorListComponent implements OnInit, OnDestroy {
   private subDoor: Subscription;
-  public isCollapsed = false;
+  public isCollapsed = true;
   public doors: Door[] = [];
 
   constructor(private doorService: DoorService) { }

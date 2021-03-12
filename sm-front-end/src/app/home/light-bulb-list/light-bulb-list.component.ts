@@ -11,7 +11,7 @@ import { LightBulbService } from './light-bulb.service';
 export class LightBulbListComponent implements OnInit, OnDestroy {
   private subLightBulb: Subscription;
   public lightBulbList: LightBulb[] = [];
-  public isCollapsed = false;
+  public isCollapsed = true;
 
   constructor(private lightBulbService: LightBulbService) { }
 
@@ -27,6 +27,14 @@ export class LightBulbListComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.subLightBulb.unsubscribe();
+  }
+
+  turnOn() {
+    this.lightBulbService.turnOn();
+  }
+  
+  turnOff() {
+    this.lightBulbService.turnOff();
   }
 
 }

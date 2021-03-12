@@ -29,4 +29,12 @@ export class LightBulbService {
   public changeState(id: number) {
     
   }
+
+  public turnOff() {
+    console.log('Todo apagado!');
+  }
+  
+  public turnOn() {
+    console.log('Todo encendido!');
+  }
 }
