@@ -1,6 +1,7 @@
 #include <iostream>       
 #include <string>
 #include <vector>
+#include <fstream> 
 using namespace std;
 
 #include <pistache/endpoint.h>
@@ -94,8 +95,18 @@ class HomeEndpoint
     }
 
     void getUser(const Rest::Request& request, Http::ResponseWriter response)
-    {   
-      response.send(Http::Code::Ok, "Usuario");
+    {  
+      string result;
+      ifstream readfile;
+      readfile.open("userjson.txt", ios::in);
+      if (!readfile){
+        cout << "File not created" << endl;
+      }
+      getline(readfile, result);
+      cout << result << endl;
+      readfile.close();
+      configReponse(&response);
+      response.send(Http::Code::Ok, result);
     }
 
     void putLight(const Rest::Request& request, Http::ResponseWriter response)
@@ -115,6 +126,7 @@ class HomeEndpoint
       {
         cout << "Id Luz: " << it->id << " Estado: " << it->state << endl;
       }
+      configReponse(&response);
       response.send(Http::Code::Ok);
     }
 
@@ -135,12 +147,37 @@ class HomeEndpoint
       {
         cout << "Id Puerta: " << it->id << " Estado: " << it->state << endl;
       }
-
+      configReponse(&response);
       response.send(Http::Code::Ok);
     }
 
     void putUser(const Rest::Request& request, Http::ResponseWriter response)
-    {   
+    { 
+      string userjson = request.body();
+      Document doc;
+      doc.Parse(userjson.c_str());
+
+      Home::home->user.name = doc["name"].GetString();
+      Home::home->user.email = doc["email"].GetString();
+      Home::home->user.password = doc["password"].GetString();
+
+      string result = Home::home->user.serialize();
+      cout << result << endl;
+
+      ofstream writefile;
+      writefile.open("userjson.txt", ios::app);
+      if (!writefile)
+      {
+        cout << "File not created" << endl;
+      }
+      else
+      {
+        cout << "File created" << endl;
+        writefile << result << endl;
+      }
+      writefile.close();
+
+      configReponse(&response);
       response.send(Http::Code::Ok);
     }
 
@@ -151,11 +188,9 @@ class HomeEndpoint
     Rest::Router router;
 };
 
-
-
 void start_endpoint() 
 {
-  Port port(9083);
+  Port port(9082);
 
   int thr = 2;
 
