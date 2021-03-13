@@ -15,6 +15,7 @@ using namespace Pistache;
 using namespace rapidjson;
 
 #include "./src/models/home.cpp"
+#include "./src/fileHandler.cpp"
 
 class HomeEndpoint 
 {
@@ -97,14 +98,8 @@ class HomeEndpoint
     void getUser(const Rest::Request& request, Http::ResponseWriter response)
     {  
       string result;
-      ifstream readfile;
-      readfile.open("userjson.txt", ios::in);
-      if (!readfile){
-        cout << "File not created" << endl;
-      }
-      getline(readfile, result);
-      cout << result << endl;
-      readfile.close();
+      result = FileHandler::readFile("userjson.txt");
+
       configReponse(&response);
       response.send(Http::Code::Ok, result);
     }
@@ -164,18 +159,7 @@ class HomeEndpoint
       string result = Home::home->user.serialize();
       cout << result << endl;
 
-      ofstream writefile;
-      writefile.open("userjson.txt", ios::app);
-      if (!writefile)
-      {
-        cout << "File not created" << endl;
-      }
-      else
-      {
-        cout << "File created" << endl;
-        writefile << result << endl;
-      }
-      writefile.close();
+      cout << FileHandler::writeFile("userjson.txt", result) << endl;;
 
       configReponse(&response);
       response.send(Http::Code::Ok);
@@ -190,7 +174,7 @@ class HomeEndpoint
 
 void start_endpoint() 
 {
-  Port port(9082);
+  Port port(9080);
 
   int thr = 2;
 

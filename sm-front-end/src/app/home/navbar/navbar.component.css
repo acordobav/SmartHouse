@@ -1,0 +1,48 @@
+.navbar-custom {
+    background-color: var(--primary-color);
+    width: 100vw;
+}
+
+/* Modify brand and text color */ 
+.navbar-custom .navbar-brand, 
+.navbar-custom .navbar-text { 
+    color: white; 
+}
+
+.navbar-custom .navbar-brand:hover {
+    color: var(--aux-color);
+}
+
+/* change the link color */
+.navbar-custom .navbar-nav .nav-link {
+    color: white;
+}
+
+/* change the color of active or hovered links */
+.navbar-custom .nav-item.active .nav-link,
+.navbar-custom .nav-item:hover .nav-link {
+    color: var(--aux-color);
+}
+
+/* change the color of the navbar toggler*/
+.navbar-custom .navbar-toggler{
+    border-color: white;
+}
+
+.navbar-toggler:focus {
+    box-shadow: 0 0 0 0.10rem white;
+}
+
+.dropdown-item:active {
+    background-color: var(--aux-color);
+}
+
+/* Delete white border on dropdown button*/
+.navbar-custom .nav-item .nav-link:focus {
+    outline: none;
+}
+
+/* Ocultar flecha del dropdown */
+.custom-dropdown-toggle::after{
+    content:initial
+ }

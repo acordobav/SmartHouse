@@ -1,0 +1,20 @@
+<div class="modal-header mx-1">
+    <div class="h5">Luces</div>
+    <button type="button" class="close" aria-label="Close" (click)="activeModal.dismiss('Cross click')">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+<div class="modal-body">
+    <div>Presione sobre el icono de la bombilla para cambiar el estado.</div>
+    <div class="px-2">
+        <app-light-bulb *ngFor="let lightBulb of lightBulbList" [lightBulb]="lightBulb"></app-light-bulb>
+    </div>
+</div>
+<div class="modal-footer">
+    <div class="col m-1">
+        <button class="btn btn-success btn-block" (click)="turnOn()">Encender todo</button>
+    </div>
+    <div class="col m-1">
+        <button class="btn btn-danger btn-block" (click)="turnOff()">Apagar todo</button>
+    </div>
+</div>
