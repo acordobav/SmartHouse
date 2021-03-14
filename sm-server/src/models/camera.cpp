@@ -5,15 +5,21 @@ using namespace std;
 class Camera {
     public:
 
-        string location;
-        string last_photo;
+        string location;    //Atributo de ubicacion
+        string last_photo;  //Atributo de ultima foto
         
+        /**
+         * Constructor de la clase Camera
+        **/
         Camera (string location = "", string last_photo = "")
         {
             this->location = location;
             this->last_photo = last_photo;
         }
-
+        
+        /**
+         * Metodo para serializar el objeto
+        **/
         template <typename Writer>
         void Serialize(Writer& writer) const 
         {
@@ -25,6 +31,9 @@ class Camera {
             writer.EndObject();
         }
 
+        /**
+         * Metodo para convertir el objeto json a string
+        **/
         std::string serialize()
         {
             StringBuffer s;

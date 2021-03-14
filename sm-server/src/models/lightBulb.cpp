@@ -11,17 +11,23 @@ using namespace rapidjson;
 class LightBulb {
     public:
 
-        int id;           //Atributte of ID
-        string location;  //Atributte of location
-        int state;        //Atributte of state: 0 = OFF, 1 = ON
+        int id;           //Atributo identificador
+        string location;  //Atributo de ubicacion
+        int state;        //Atributo de estado: 0 = OFF, 1 = ON
         
+        /**
+         * Constructor de la clase Lightbulb
+        **/
         LightBulb (int id, string location, int state)
         {
             this->id = id;
             this->location = location;
             this->state = state;
         }
-
+        
+        /**
+         * Metodo para serializar el objeto
+        **/
         template <typename Writer>
         void Serialize(Writer& writer) const 
         {
@@ -35,6 +41,9 @@ class LightBulb {
             writer.EndObject();
         }
 
+        /**
+         * Metodo para convertir el objeto json a string
+        **/
         std::string serialize()
         {
             StringBuffer s;

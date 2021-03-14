@@ -11,11 +11,15 @@ using namespace std;
 class Home {
     public:
         static Home* const home;
-        list<LightBulb> lightList;
-        list<Door> doorList;
-        Camera camera;
-        User user;
+        list<LightBulb> lightList;  //Atributo de lista de luces
+        list<Door> doorList;        //Atributo de lista de puertas
+        Camera camera;              //Atributo de camara
+        User user;                  //Atributo de usuario
     private:
+
+        /**
+         * Constructor de la clase Home
+        **/
         Home()
         {
             LightBulb light1(1,"Cocina", 0);

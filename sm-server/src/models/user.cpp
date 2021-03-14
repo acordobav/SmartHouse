@@ -5,11 +5,14 @@ using namespace std;
 class User {
     public:
 
-        string name;
-        string email;
-        string password;
-        string token;
+        string name;        //Atributo de nombre
+        string email;       //Atributo de correo electronico
+        string password;    //Atributo de contrasena
+        string token;       //Atributo de token
         
+        /**
+         * Constructor de la clase User
+        **/
         User (string name = "", string email = "", string password = "", string token = "")
         {
             name = name;
@@ -18,6 +21,9 @@ class User {
             token = token;
         }
 
+        /**
+         * Metodo para serializar el objeto
+        **/
         template <typename Writer>
         void Serialize(Writer& writer) const 
         {
@@ -28,11 +34,12 @@ class User {
             writer.String(email.c_str());
             writer.String("password");
             writer.String(password.c_str());
-            writer.String("token");
-            writer.String(token.c_str());
             writer.EndObject();
         }
 
+        /**
+         * Metodo para convertir el objeto json a string
+        **/
         std::string serialize()
         {
             StringBuffer s;
