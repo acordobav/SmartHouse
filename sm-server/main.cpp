@@ -183,7 +183,21 @@ class HomeEndpoint
       int verify = verifyToken(enc_str);
 
       if(verify == 0)
-      {
+      { 
+        ifstream imageFile("jardin.jpg", ifstream::binary);
+        if (imageFile)
+        { 
+          imageFile.seekg(0, imageFile.end);
+          int length = imageFile.tellg();
+          imageFile.seekg(0, imageFile.beg);
+          char * buffer = new char[length];
+
+          imageFile.read(buffer, length);
+          string encode = base64_encode((const unsigned char*)buffer, length);
+          Home::home->camera.last_photo = encode;
+          imageFile.close();
+          delete[] buffer;
+        }
         string result = Home::home->camera.serialize();
         configReponse(&response);
         response.send(Http::Code::Ok, result);
@@ -207,8 +221,7 @@ class HomeEndpoint
 
       if (verify == 0)
       {
-        string result;
-        result = FileHandler::readFile("userjson.txt");
+        string result = FileHandler::readFile("userjson.txt");
         configReponse(&response);
         response.send(Http::Code::Ok, result);
       }
@@ -375,7 +388,7 @@ class HomeEndpoint
 **/
 void start_endpoint() 
 {
-  Port port(9080);
+  Port port(9082);
 
   int thr = 2;
 
