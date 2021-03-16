@@ -1,0 +1,282 @@
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="600"
+   height="600"
+   viewBox="0 0 158.74999 158.75001"
+   version="1.1"
+   id="svg8"
+   inkscape:version="1.0.2 (e86c870879, 2021-01-15)"
+   sodipodi:docname="maqueta_compu_plano.svg">
+  <defs
+     id="defs2" />
+
+  <g
+     inkscape:label="Capa 1"
+     inkscape:groupmode="layer"
+     id="layer1">
+    <rect
+       style="fill:#ffffff;fill-rule:evenodd;stroke:#000000;stroke-width:0.162239"
+       id="rect49"
+       width="153.2961"
+       height="153.2961"
+       x="2.8918312"
+       y="3.3240907" />
+    <rect
+       style="fill:#ff9955;fill-rule:evenodd;stroke:#000000;stroke-width:0.162239"
+       id="rect53"
+       width="61.318436"
+       height="45.988831"
+       x="2.8918312"
+       y="3.3241153" />
+    <rect
+       style="fill:#ff80b2;fill-rule:evenodd;stroke:#000000;stroke-width:0.162239"
+       id="rect53-3"
+       width="61.318436"
+       height="61.318436"
+       x="94.869492"
+       y="3.3241153" />
+    <rect
+       style="fill:#ffaaee;fill-rule:evenodd;stroke:#000000;stroke-width:0.162239"
+       id="rect53-6"
+       width="61.318436"
+       height="61.318436"
+       x="94.869492"
+       y="95.301758" />
+    <rect
+       style="fill:#ffb380;fill-rule:evenodd;stroke:#000000;stroke-width:0.162239"
+       id="rect53-7"
+       width="61.318436"
+       height="45.988831"
+       x="2.8918312"
+       y="49.31295" />
+    <rect
+       style="fill:#87de87;fill-rule:evenodd;stroke:#000000;stroke-width:0.162239"
+       id="rect53-6-5"
+       width="61.318436"
+       height="61.318436"
+       x="2.8918312"
+       y="95.301758" />
+    <rect
+       style="fill:#ac93a7;fill-rule:evenodd;stroke:#000000;stroke-width:0.162239"
+       id="rect53-7-3"
+       width="61.318436"
+       height="30.659218"
+       x="94.869492"
+       y="64.642555" />
+    <rect
+       style="fill:#00ffff;fill-rule:evenodd;stroke:#000000;stroke-width:0.162239"
+       id="luz_sala"
+       width="9.1977663"
+       height="9.1977663"
+       x="26.556686"
+       y="21.60688"
+       rx="9.1977663"
+       ry="9.1977663" />
+    <rect
+       style="fill:#00ffff;fill-rule:evenodd;stroke:#000000;stroke-width:0.162239"
+       id="luz_comedor"
+       width="9.1977663"
+       height="9.1977663"
+       x="28.952164"
+       y="67.708473"
+       rx="9.1977663"
+       ry="9.1977663" />
+    <rect
+       style="fill:#00ffff;fill-rule:evenodd;stroke:#000000;stroke-width:0.162239"
+       id="luz_cocina"
+       width="9.1977663"
+       height="9.1977663"
+       x="28.952164"
+       y="121.36209"
+       rx="9.1977663"
+       ry="9.1977663" />
+    <rect
+       style="fill:#00ffff;fill-rule:evenodd;stroke:#000000;stroke-width:0.162239"
+       id="luz_cuarto2"
+       width="9.1977663"
+       height="9.1977663"
+       x="120.92982"
+       y="121.36209"
+       rx="9.1977663"
+       ry="9.1977663" />
+    <rect
+       style="fill:#00ffff;fill-rule:evenodd;stroke:#000000;stroke-width:0.162239"
+       id="luz_bano"
+       width="9.1977663"
+       height="9.1977663"
+       x="120.92982"
+       y="75.373276"
+       rx="9.1977663"
+       ry="9.1977663" />
+    <rect
+       style="fill:#00ffff;fill-rule:evenodd;stroke:#000000;stroke-width:0.162239"
+       id="luz_cuarto1"
+       width="9.1977663"
+       height="9.1977663"
+       x="120.92982"
+       y="29.384451"
+       rx="9.1977663"
+       ry="9.1977663" />
+    <text
+       xml:space="preserve"
+       style="font-size:5.1916px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;stroke-width:0.0811193"
+       x="14.319261"
+       y="41.956203"
+       id="text197"><tspan
+         sodipodi:role="line"
+         id="tspan195"
+         x="14.319261"
+         y="41.956203"
+         style="font-size:5.1916px;stroke-width:0.0811193">sala</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:5.1916px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;stroke-width:0.0811193"
+       x="13.053056"
+       y="91.960548"
+       id="text197-2"><tspan
+         sodipodi:role="line"
+         id="tspan195-7"
+         x="13.053056"
+         y="91.960548"
+         style="font-size:5.1916px;stroke-width:0.0811193">comedor</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:5.1916px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;stroke-width:0.0811193"
+       x="12.357743"
+       y="151.33978"
+       id="text197-0"><tspan
+         sodipodi:role="line"
+         id="tspan195-9"
+         x="12.357743"
+         y="151.33978"
+         style="font-size:5.1916px;stroke-width:0.0811193">cocina</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:16.9333px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;stroke-width:0.264583"
+       x="270.43195"
+       y="154.02589"
+       id="text197-3"><tspan
+         sodipodi:role="line"
+         id="tspan195-6"
+         x="270.43195"
+         y="154.02589"
+         style="font-size:16.9333px;stroke-width:0.264583" /></text>
+    <text
+       xml:space="preserve"
+       style="font-size:5.1916px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;stroke-width:0.0811193"
+       x="102.42324"
+       y="92.748566"
+       id="text197-06"><tspan
+         sodipodi:role="line"
+         id="tspan195-2"
+         x="102.42324"
+         y="92.748566"
+         style="font-size:5.1916px;stroke-width:0.0811193">baño</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:5.1916px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;stroke-width:0.0811193"
+       x="103.90657"
+       y="154.39914"
+       id="text197-6"><tspan
+         sodipodi:role="line"
+         id="tspan195-1"
+         x="103.90657"
+         y="154.39914"
+         style="font-size:5.1916px;stroke-width:0.0811193">cuarto2</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:5.1916px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;stroke-width:0.0811193"
+       x="105.34352"
+       y="62.062347"
+       id="text197-8"><tspan
+         sodipodi:role="line"
+         id="tspan195-79"
+         x="105.34352"
+         y="62.062347"
+         style="font-size:5.1916px;stroke-width:0.0811193">cuarto1</tspan></text>
+    <rect
+       style="fill:#2b1100;fill-rule:evenodd;stroke:none;stroke-width:0.162239"
+       id="puerta_patio"
+       width="21.308475"
+       height="1.3229166"
+       x="68.885643"
+       y="156.62021" />
+    <rect
+       style="fill:#2b1100;fill-rule:evenodd;stroke:none;stroke-width:0.162239"
+       id="puerta_entrada"
+       width="21.308475"
+       height="1.3229166"
+       x="68.885666"
+       y="2.0012023" />
+    <rect
+       style="fill:#2b1100;fill-rule:evenodd;stroke:none;stroke-width:0.162239"
+       id="puerta_cuarto1"
+       width="21.308475"
+       height="1.3229166"
+       x="23.3291"
+       y="-94.869476"
+       transform="rotate(90)" />
+    <rect
+       style="fill:#2b1100;fill-rule:evenodd;stroke:none;stroke-width:0.162239"
+       id="puerta_cuarto2"
+       width="21.308475"
+       height="1.3229166"
+       x="115.30673"
+       y="-94.869507"
+       transform="rotate(90)" />
+    <rect
+       style="fill:#2b1100;fill-rule:evenodd;stroke:none;stroke-width:0.162239"
+       id="puerta_bano"
+       width="21.308475"
+       height="1.3229166"
+       x="69.317924"
+       y="-94.869507"
+       transform="rotate(90)" />
+    <rect
+       style="fill:#2b1100;fill-rule:evenodd;stroke:none;stroke-width:0.162239"
+       id="puerta_entrada_open"
+       width="21.308475"
+       height="1.3229166"
+       x="53.876328"
+       y="49.932755"
+       transform="rotate(-31.478785)" />
+    <rect
+       style="fill:#2b1100;fill-rule:evenodd;stroke:none;stroke-width:0.162239"
+       id="puerta_cuarto1__open"
+       width="21.308475"
+       height="1.3229166"
+       x="57.5989"
+       y="87.607635"
+       transform="rotate(-31.478785)" />
+    <rect
+       style="fill:#2b1100;fill-rule:evenodd;stroke:none;stroke-width:0.162239"
+       id="puerta_bano_open"
+       width="21.308475"
+       height="1.3229166"
+       x="33.584351"
+       y="126.82847"
+       transform="rotate(-31.478785)" />
+    <rect
+       style="fill:#2b1100;fill-rule:evenodd;stroke:none;stroke-width:0.162239"
+       id="puerta_cuarto2_open"
+       width="21.308475"
+       height="1.3229166"
+       x="9.569788"
+       y="166.04926"
+       transform="rotate(-31.478785)" />
+    <rect
+       style="fill:#2b1100;fill-rule:evenodd;stroke:none;stroke-width:0.162239"
+       id="puerta_patio_open"
+       width="21.308475"
+       height="1.3229166"
+       x="-23.036394"
+       y="168.21895"
+       transform="rotate(-31.478785)" />
+  </g>
+</svg>
