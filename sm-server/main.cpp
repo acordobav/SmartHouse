@@ -19,10 +19,19 @@ using namespace rapidjson;
 #include "./src/fileHandler.cpp"
 #include "./src/encrypting.cpp"
 
-#include <websocketpp/config/asio_no_tls.hpp>
-#include <websocketpp/server.hpp>
+#include <boost/beast/core.hpp>
+#include <boost/beast/websocket.hpp>
+#include <boost/asio/ip/tcp.hpp>
+#include <cstdlib>
 #include <functional>
-typedef websocketpp::server<websocketpp::config::asio> server;
+#include <thread>
+
+namespace beast = boost::beast;         // from <boost/beast.hpp>
+namespace http = beast::http;           // from <boost/beast/http.hpp>
+namespace websocket = beast::websocket; // from <boost/beast/websocket.hpp>
+namespace net = boost::asio;            // from <boost/asio.hpp>
+using tcp = boost::asio::ip::tcp;       // from <boost/asio/ip/tcp.hpp>
+
 
 class HomeEndpoint 
 {
@@ -389,7 +398,6 @@ class HomeEndpoint
     Rest::Router router;
 };
 
-
 void *start_restEndpoint(void *input) 
 {
   Port port(9080);
@@ -402,26 +410,51 @@ void *start_restEndpoint(void *input)
   return NULL;
 }
 
-void on_message(websocketpp::connection_hdl, server::message_ptr msg) 
+void websocketServer(tcp::socket socket)
 {
-  std::cout << msg->get_payload() << std::endl;
+  // Construct the stream by moving in the socket
+  websocket::stream<tcp::socket> ws{std::move(socket)};
+
+  // Accept the websocket handshake
+  ws.accept();
+
+  for(;;)
+  {
+    // This buffer will hold the incoming message
+    beast::flat_buffer buffer;
+    // Read a message
+    ws.read(buffer);
+    //Print the message
+    std::cout << beast::make_printable(buffer.data()) << std::endl;
+    //Echo the message back
+    ws.text(ws.got_text());
+    ws.write(buffer.data());
+  }
 }
 
 void *start_websocketEndpoint(void *input)
 {
-  server print_server;
+  auto const address = net::ip::make_address("10.0.2.15");
+  auto const port = static_cast<unsigned short>(9081);
 
-  print_server.set_message_handler(&on_message);
-  print_server.set_access_channels(websocketpp::log::alevel::all);
-  print_server.set_error_channels(websocketpp::log::elevel::all);
+  // The io_context is required for all I/O
+  net::io_context ioc{1};
 
-  print_server.init_asio();
-  print_server.listen(9081);
-  print_server.start_accept();
+  // The acceptor receives incoming connections
+  tcp::acceptor acceptor{ioc, {address, port}};
+  for(;;)
+  {
+      // This will receive the new connection
+      tcp::socket socket{ioc};
 
-  print_server.run();
+      // Block until we get a connection
+      acceptor.accept(socket);
 
-  return NULL;
+      // Launch the session, transferring ownership of the socket
+      std::thread(
+          &websocketServer,
+          std::move(socket)).detach();
+  }
 }
 
 int main(int argc, char *argv[]) 
