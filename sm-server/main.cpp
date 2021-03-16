@@ -1,7 +1,8 @@
 #include <iostream>       
 #include <string>
 #include <vector>
-#include <fstream> 
+#include <fstream>
+#include <pthread.h>
 using namespace std;
 
 #include <pistache/endpoint.h>
@@ -17,6 +18,11 @@ using namespace rapidjson;
 #include "./src/models/home.cpp"
 #include "./src/fileHandler.cpp"
 #include "./src/encrypting.cpp"
+
+#include <websocketpp/config/asio_no_tls.hpp>
+#include <websocketpp/server.hpp>
+#include <functional>
+typedef websocketpp::server<websocketpp::config::asio> server;
 
 class HomeEndpoint 
 {
@@ -383,27 +389,48 @@ class HomeEndpoint
     Rest::Router router;
 };
 
-/**
- * Metodo asignar el puerto y direccion al servidor rest
-**/
-void start_endpoint() 
+
+void *start_restEndpoint(void *input) 
 {
-  Port port(9082);
-
+  Port port(9080);
   int thr = 2;
-
   Address addr(Ipv4::any(), port);
-
   HomeEndpoint home(addr);
-
   home.init(thr);
   home.start();
+
+  return NULL;
 }
 
-/**
- * Metodo principal de ejecucion
-**/
+void on_message(websocketpp::connection_hdl, server::message_ptr msg) 
+{
+  std::cout << msg->get_payload() << std::endl;
+}
+
+void *start_websocketEndpoint(void *input)
+{
+  server print_server;
+
+  print_server.set_message_handler(&on_message);
+  print_server.set_access_channels(websocketpp::log::alevel::all);
+  print_server.set_error_channels(websocketpp::log::elevel::all);
+
+  print_server.init_asio();
+  print_server.listen(9081);
+  print_server.start_accept();
+
+  print_server.run();
+
+  return NULL;
+}
+
 int main(int argc, char *argv[]) 
 {
-  start_endpoint();
+  pthread_t thread1, thread2;
+
+  pthread_create(&thread1, NULL, start_restEndpoint, NULL);
+  pthread_create(&thread2, NULL, start_websocketEndpoint, NULL);
+
+  pthread_join(thread1, NULL);
+  pthread_join(thread2, NULL);
 }

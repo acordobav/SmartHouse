@@ -31,3 +31,26 @@ $ cmake -G "Unix Makefiles" \
 $ make -j
 $ make install
 ```
+
+## Instalacion de RapidJson
+
+```console
+$ sudo apt-get update
+$ sudo apt-get install rapidjson-dev
+```
+
+## Instalacion de Websocketpp
+
+```console
+$ git clone https://github.com/zaphoyd/websocketpp.git && cd websocketpp
+$ mkdir build && cd build
+$ cmake -DCMAKE_INSTALL_PREFIX=/opt/websocketpp ..
+$ sudo cmake --build . --target install
+```
+
+## Instalacion de Boost
+
+```console
+$ sudo apt-get update
+$ sudo apt-get install libboost-all-dev
+```
