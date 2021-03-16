@@ -18,10 +18,10 @@ export class DoorService {
     let doors: Door[] = [];
 
     doors.push(new Door(0, "Puerta Frontal", 0));
-    doors.push(new Door(0, "Puerta Trasera", 0));
-    doors.push(new Door(0, "Puerta Baño", 1));
-    doors.push(new Door(0, "Puerta Cuarto 1", 0));
-    doors.push(new Door(0, "Puerta Cuarto 2", 0));
+    doors.push(new Door(1, "Puerta Trasera", 1));
+    doors.push(new Door(2, "Puerta Baño", 0));
+    doors.push(new Door(3, "Puerta Cuarto 1", 1));
+    doors.push(new Door(4, "Puerta Cuarto 2", 1));
 
     this._doors.next(doors);
   }

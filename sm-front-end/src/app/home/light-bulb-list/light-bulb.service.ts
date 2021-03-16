@@ -7,34 +7,45 @@ import { LightBulb } from 'src/app/models/light-bulb.model';
 })
 export class LightBulbService {
   private _lightBulbs = new Subject<LightBulb[]>();
-  
-  constructor() { }
+  private bulbList: LightBulb[] = [];
+
+  constructor() {
+    this.bulbList.push(new LightBulb(0, "Luz Cocina", 0));
+    this.bulbList.push(new LightBulb(1, "Luz Sala", 0));
+    this.bulbList.push(new LightBulb(2, "Luz Baño", 1));
+    this.bulbList.push(new LightBulb(3, "Luz Cuarto 1", 0));
+    this.bulbList.push(new LightBulb(4, "Luz Cuarto 2", 0));
+    this.bulbList.push(new LightBulb(5, "Luz Comedor", 0));
+   }
 
   get lightBulbs(): Observable<LightBulb[]> {
     return this._lightBulbs.asObservable();
   }
 
-  public fetchData() {
-    let doors: LightBulb[] = [];
-
-    doors.push(new LightBulb(0, "Luz Cocina", 0));
-    doors.push(new LightBulb(0, "Luz Sala", 0));
-    doors.push(new LightBulb(0, "Luz Baño", 1));
-    doors.push(new LightBulb(0, "Luz Cuarto 1", 0));
-    doors.push(new LightBulb(0, "Luz Cuarto 2", 0));
-
-    this._lightBulbs.next(doors);
+  public update() {
+    this._lightBulbs.next(this.bulbList);
   }
 
   public changeState(id: number) {
-    
+    if(this.bulbList[id].state) {
+      this.bulbList[id].state = 0;
+    } else {
+      this.bulbList[id].state = 1;
+    }
+    this.update();
   }
 
   public turnOff() {
-    console.log('Todo apagado!');
+    for (let i = 0; i < this.bulbList.length; i++) {
+      this.bulbList[i].state = 0;
+    }
+    this.update();
   }
   
   public turnOn() {
-    console.log('Todo encendido!');
+    for (let i = 0; i < this.bulbList.length; i++) {
+      this.bulbList[i].state = 1;
+    }
+    this.update();
   }
 }
