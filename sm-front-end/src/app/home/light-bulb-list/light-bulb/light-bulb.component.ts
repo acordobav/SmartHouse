@@ -16,12 +16,6 @@ export class LightBulbComponent implements OnInit {
   }
 
   changeState() {
-    if(this.lightBulb.state === 1) {
-      this.lightBulb.state = 0;
-    } else {
-      this.lightBulb.state = 1;
-    }
-
     this.lightBulbService.changeState(this.lightBulb.id);
   }
 

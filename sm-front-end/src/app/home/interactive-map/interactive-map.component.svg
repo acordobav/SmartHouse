@@ -22,17 +22,17 @@
             width="61.318436" height="61.318436" x="2.8918312" y="95.301758" />
         <rect style="fill:#ac93a7;fill-rule:evenodd;stroke:#000000;stroke-width:0.162239" id="rect53-7-3"
             width="61.318436" height="30.659218" x="94.869492" y="64.642555" />
-        <rect style="fill:#00ffff;fill-rule:evenodd;stroke:#000000;stroke-width:0.162239" id="luz_sala"
+        <rect class="hover" style="fill-rule:evenodd;stroke:#000000;stroke-width:0.162239" (click)="changeBulbState(1)" [style.fill]="livingroomBulb" id="luz_sala"
             width="9.1977663" height="9.1977663" x="26.556686" y="21.60688" rx="9.1977663" ry="9.1977663" />
-        <rect style="fill:#00ffff;fill-rule:evenodd;stroke:#000000;stroke-width:0.162239" id="luz_comedor"
+        <rect class="hover" style="fill-rule:evenodd;stroke:#000000;stroke-width:0.162239" (click)="changeBulbState(5)" [style.fill]="dinningroomBulb" id="luz_comedor"
             width="9.1977663" height="9.1977663" x="28.952164" y="67.708473" rx="9.1977663" ry="9.1977663" />
-        <rect style="fill:#00ffff;fill-rule:evenodd;stroke:#000000;stroke-width:0.162239" id="luz_cocina"
+        <rect class="hover" style="fill-rule:evenodd;stroke:#000000;stroke-width:0.162239" (click)="changeBulbState(0)" [style.fill]="kitchenBulb" id="luz_cocina"
             width="9.1977663" height="9.1977663" x="28.952164" y="121.36209" rx="9.1977663" ry="9.1977663" />
-        <rect style="fill:#00ffff;fill-rule:evenodd;stroke:#000000;stroke-width:0.162239" id="luz_cuarto2"
+        <rect class="hover" style="fill-rule:evenodd;stroke:#000000;stroke-width:0.162239" (click)="changeBulbState(4)" [style.fill]="room2Bulb" id="luz_cuarto2"
             width="9.1977663" height="9.1977663" x="120.92982" y="121.36209" rx="9.1977663" ry="9.1977663" />
-        <rect style="fill:#00ffff;fill-rule:evenodd;stroke:#000000;stroke-width:0.162239" id="luz_bano"
+        <rect class="hover" style="fill-rule:evenodd;stroke:#000000;stroke-width:0.162239" (click)="changeBulbState(2)" [style.fill]="bathroomBulb" id="luz_bano"
             width="9.1977663" height="9.1977663" x="120.92982" y="75.373276" rx="9.1977663" ry="9.1977663" />
-        <rect style="fill:#00ffff;fill-rule:evenodd;stroke:#000000;stroke-width:0.162239" id="luz_cuarto1"
+        <rect class="hover" style="fill-rule:evenodd;stroke:#000000;stroke-width:0.162239" (click)="changeBulbState(3)" [style.fill]="room1Bulb"  id="luz_cuarto1"
             width="9.1977663" height="9.1977663" x="120.92982" y="29.384451" rx="9.1977663" ry="9.1977663" />
         <text xml:space="preserve"
             style="font-size:5.1916px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;stroke-width:0.0811193"
@@ -75,25 +75,25 @@
             <tspan sodipodi:role="line" id="tspan195-79" x="105.34352" y="62.062347"
                 style="font-size:5.1916px;stroke-width:0.0811193">cuarto1</tspan>
         </text>
-        <rect style="fill:#2b1100;fill-rule:evenodd;stroke:none;stroke-width:0.162239" id="puerta_patio"
-            width="21.308475" height="1.3229166" x="68.885643" y="156.62021" />
-        <rect style="fill:#2b1100;fill-rule:evenodd;stroke:none;stroke-width:0.162239" id="puerta_entrada"
+        <rect [style.fill]="backDoorClosed" id="puerta_patio"
+            width="21.308475" height="1.3229166" x="68.885643" y="156.62021"/>
+        <rect [style.fill]="frontDoorClosed" id="puerta_entrada"
             width="21.308475" height="1.3229166" x="68.885666" y="2.0012023" />
-        <rect style="fill:#2b1100;fill-rule:evenodd;stroke:none;stroke-width:0.162239" id="puerta_cuarto1"
+        <rect [style.fill]="room1DoorClosed" id="puerta_cuarto1"
             width="21.308475" height="1.3229166" x="23.3291" y="-94.869476" transform="rotate(90)" />
-        <rect style="fill:#2b1100;fill-rule:evenodd;stroke:none;stroke-width:0.162239" id="puerta_cuarto2"
+        <rect [style.fill]="room2DoorClosed" id="puerta_cuarto2"
             width="21.308475" height="1.3229166" x="115.30673" y="-94.869507" transform="rotate(90)" />
-        <rect style="fill:#2b1100;fill-rule:evenodd;stroke:none;stroke-width:0.162239" id="puerta_bano"
+        <rect [style.fill]="bathroomDoorClosed" id="puerta_bano"
             width="21.308475" height="1.3229166" x="69.317924" y="-94.869507" transform="rotate(90)" />
-        <rect style="fill:#2b1100;fill-rule:evenodd;stroke:none;stroke-width:0.162239" id="puerta_entrada_open"
+        <rect [style.fill]="frontDoorOpen" id="puerta_entrada_open"
             width="21.308475" height="1.3229166" x="53.876328" y="49.932755" transform="rotate(-31.478785)" />
-        <rect style="fill:#2b1100;fill-rule:evenodd;stroke:none;stroke-width:0.162239" id="puerta_cuarto1__open"
+        <rect [style.fill]="room1DoorOpen" id="puerta_cuarto1__open"
             width="21.308475" height="1.3229166" x="57.5989" y="87.607635" transform="rotate(-31.478785)" />
-        <rect style="fill:#2b1100;fill-rule:evenodd;stroke:none;stroke-width:0.162239" id="puerta_bano_open"
+        <rect [style.fill]="bathroomDoorOpen" id="puerta_bano_open"
             width="21.308475" height="1.3229166" x="33.584351" y="126.82847" transform="rotate(-31.478785)" />
-        <rect style="fill:#2b1100;fill-rule:evenodd;stroke:none;stroke-width:0.162239" id="puerta_cuarto2_open"
+        <rect [style.fill]="room2DoorOpen" id="puerta_cuarto2_open"
             width="21.308475" height="1.3229166" x="9.569788" y="166.04926" transform="rotate(-31.478785)" />
-        <rect style="fill:#2b1100;fill-rule:evenodd;stroke:none;stroke-width:0.162239" id="puerta_patio_open"
+        <rect [style.fill]="backDoorOpen" id="puerta_patio_open"
             width="21.308475" height="1.3229166" x="-23.036394" y="168.21895" transform="rotate(-31.478785)" />
     </g>
 </svg>

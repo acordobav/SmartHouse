@@ -1,3 +1,7 @@
 .svg-container {
     min-width: 40vw;
 }
+
+.hover:hover {
+    cursor: pointer;
+}

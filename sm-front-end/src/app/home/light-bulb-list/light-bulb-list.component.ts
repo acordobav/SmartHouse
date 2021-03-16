@@ -23,7 +23,7 @@ export class LightBulbListComponent implements OnInit, OnDestroy {
       }
     );
 
-    this.lightBulbService.fetchData();
+    this.lightBulbService.update();
   }
 
   ngOnDestroy() {
