@@ -2,18 +2,18 @@
 #include <wiringPi.h>
 #include <pthread.h>
 
-#define FRONT_DOOR 1    // GPIO 18
-#define BACK_DOOR 4     // GPIO 23
-#define BATHROOM_DOOR 5 // GPIO 24
-#define ROOM1_DOOR 6    // GPIO 25
-#define ROOM2_DOOR 27   // GPIO 16
+#define FRONT_DOOR 1    // GPIO 18 - PIN 12
+#define BACK_DOOR 4     // GPIO 23 - PIN 16
+#define BATHROOM_DOOR 5 // GPIO 24 - PIN 18
+#define ROOM1_DOOR 6    // GPIO 25 - PIN 22
+#define ROOM2_DOOR 27   // GPIO 16 - PIN 36
 
-#define KITCHEN_BULB 0      // GPIO 17
-#define LIVINGROOM_BULB 2   // GPIO 27
-#define BATHROOM_BULB 3     // GPIO 22
-#define ROOM1_BULB 21       // GPIO 5
-#define ROOM2_BULB 22       // GPIO 6
-#define DINNINGROOM_BULB 25 // GPIO 26
+#define KITCHEN_BULB 0      // GPIO 17 - PIN 11
+#define LIVINGROOM_BULB 2   // GPIO 27 - PIN 13
+#define BATHROOM_BULB 3     // GPIO 22 - PIN 15
+#define ROOM1_BULB 21       // GPIO 5  - PIN 29
+#define ROOM2_BULB 22       // GPIO 6  - PIN 31
+#define DINNINGROOM_BULB 25 // GPIO 26 - PIN 37
 
 // 0 -> cocina
 // 1 -> sala
@@ -21,8 +21,8 @@
 // 3 -> luz cuarto 1
 // 4 -> luz cuarto 2
 // 5 -> comedor
-#define DOORS_SIZE 5
-static volatile int bulbs[DOORS_SIZE] = {0};
+#define BULBS_SIZE 6
+static volatile int bulbs[BULBS_SIZE] = {0};
 pthread_mutex_t bulbs_mutex = PTHREAD_MUTEX_INITIALIZER;
 
 // 0 -> puerta frontal
@@ -30,12 +30,14 @@ pthread_mutex_t bulbs_mutex = PTHREAD_MUTEX_INITIALIZER;
 // 2 -> puerta bano
 // 3 -> puerta cuarto 1
 // 4 -> puerta cuarto 2
-static volatile int doors[5] = {0};
+#define DOORS_SIZE 5
+static volatile int doors[DOORS_SIZE] = {0};
 pthread_mutex_t doors_mutex = PTHREAD_MUTEX_INITIALIZER;
 
 // Condicion indica cambio en el estado de una puerta
 pthread_cond_t doors_cond = PTHREAD_COND_INITIALIZER;
 int change = 0;
+
 /**
  * Funcion para inicializar la bilbioteca
 **/
@@ -44,6 +46,8 @@ int smhSetup();
 /**
  * Funcion que establece la interrupcion al detectar
  * un cambio en el pin de una puerta
+ * pin: numero de wPi que corresponde al pin 
+ *      de una puerta
 **/
 void setDoorISR(int pin);
 
@@ -56,10 +60,20 @@ void doorInterrupt(void);
 
 /**
  * Funcion que obtiene el estado de las puertas
+ * array: lista donde escribir el resultado
 **/
 void getDoorsStatus(int array[DOORS_SIZE]);
 
 /**
- * Funcion para cambiar el estado de un bombibllo
+ * Funcion que obtiene el estado de los bombillos
+ * array: lista donde escribir el resultado
 **/
-int changeBulbState(int bulbId, int newState);
+void getBulbsStatus(int array[BULBS_SIZE]);
+
+/**
+ * Funcion para cambiar el estado de un bombibllo
+ * bulbId: identificador del bombillo, que corresponde
+ *         con su posicion en la lista de bombillos
+ * newState: 0 para apagar, 1 para encender
+**/
+void changeBulbState(int bulbId, int newState);
