@@ -1,5 +1,3 @@
-#include "smarthouse.h"
-
 int smhSetup(int switchType)
 {
   if (wiringPiSetup() < 0)
