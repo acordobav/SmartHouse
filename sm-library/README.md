@@ -28,7 +28,8 @@ getDoorsStatus(int array[DOORS_SIZE]);
 Esta función bloquea la ejecución del hilo hasta que se detecte un cambio en uno de los pines de la puerta. El array que recibe como argumento es donde se coloca el estado de las puertas, donde un 0 significa cerrado y un 1 abierto.
 
 
-## Distribución de Pines e identificador
+## Distribución de Pines e identificador para las puertas y bombillos
+El identificador es igual a la posición en la lista correspondiente.
 
 ### Puertas
 | Nombre | ID | GPIO | PIN | 
