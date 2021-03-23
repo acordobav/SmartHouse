@@ -1,10 +1,16 @@
 #include "smarthouse.h"
 
-int smhSetup()
+int smhSetup(int switchType)
 {
   if (wiringPiSetup() < 0)
   {
     printf("Unable to setup wiringPi\n");
+    return 1;
+  }
+
+  if (switchType != 1 && switchType != 0)
+  {
+    printf("El tipo de switch debe ser 0 o 1");
     return 1;
   }
 
@@ -25,23 +31,84 @@ int smhSetup()
   digitalWrite(ROOM2_BULB, 0);
   digitalWrite(DINNINGROOM_BULB, 0);
 
+  // Estado inicial de las puertas
+  setDoorInitialState();
+
   // Se configura la interrupcion en los pines de puertas
-  setDoorISR(FRONT_DOOR);
-  setDoorISR(BACK_DOOR);
-  setDoorISR(BATHROOM_DOOR);
-  setDoorISR(ROOM1_DOOR);
-  setDoorISR(ROOM2_DOOR);
+  setDoorISR(FRONT_DOOR, switchType, &frontdoorInterrupt);
+  setDoorISR(BACK_DOOR, switchType, &backdoorInterrupt);
+  setDoorISR(BATHROOM_DOOR, switchType, &bathroomdoorInterrupt);
+  setDoorISR(ROOM1_DOOR, switchType, &room1doorInterrupt);
+  setDoorISR(ROOM2_DOOR, switchType, &room2doorInterrupt);
 }
 
-void setDoorISR(int pin)
+void setDoorISR(int pin, int switchType, void *interrupt)
 {
-  if (wiringPiISR(pin, INT_EDGE_BOTH, &doorInterrupt) < 0)
+  if (switchType == 0) // Switch pulsador
   {
-    printf("Unable to setup ISR on Wpi: %d\n", pin);
+    if (wiringPiISR(pin, INT_EDGE_RISING, interrupt) < 0)
+    {
+      printf("Unable to setup ISR on Wpi: %d\n", pin);
+    }
+  }
+  else // Switch que mantiene su estado
+  {
+    if (wiringPiISR(pin, INT_EDGE_BOTH, interrupt) < 0)
+    {
+      printf("Unable to setup ISR on Wpi: %d\n", pin);
+    }
   }
 }
 
-void doorInterrupt(void)
+void frontdoorInterrupt(void)
+{
+  doorInterrupt(0, FRONT_DOOR);
+}
+
+void backdoorInterrupt(void)
+{
+  doorInterrupt(1, BACK_DOOR);
+}
+
+void bathroomdoorInterrupt(void)
+{
+  doorInterrupt(2, BATHROOM_DOOR);
+}
+
+void room1doorInterrupt(void)
+{
+  doorInterrupt(3, ROOM1_DOOR);
+}
+
+void room2doorInterrupt(void)
+{
+  doorInterrupt(4, ROOM2_DOOR);
+}
+
+void doorInterrupt(int id, int pin)
+{
+  // Se bloquea el recurso (lista puertas)
+  pthread_mutex_lock(&doors_mutex);
+
+  // Se guarda el estado nuevo estado de las puerta
+  if (doors[id] == 0)
+  {
+    doors[id] = 1;
+  }
+  else
+  {
+    doors[id] = 0;
+  }
+
+  // Se emite la senal de cambio en una puerta
+  pthread_cond_broadcast(&doors_cond);
+
+  change = 1;
+  // Se desbloquea el recurso (lista puertas)
+  pthread_mutex_unlock(&doors_mutex);
+}
+
+void setDoorInitialState()
 {
   // Se bloquea el recurso (lista puertas)
   pthread_mutex_lock(&doors_mutex);
@@ -53,10 +120,6 @@ void doorInterrupt(void)
   doors[3] = digitalRead(ROOM1_DOOR);
   doors[4] = digitalRead(ROOM2_DOOR);
 
-  // Se emite la senal de cambio en una puerta
-  pthread_cond_broadcast(&doors_cond);
-
-  change = 1;
   // Se desbloquea el recurso (lista puertas)
   pthread_mutex_unlock(&doors_mutex);
 }

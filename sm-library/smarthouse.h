@@ -40,23 +40,44 @@ int change = 0;
 
 /**
  * Funcion para inicializar la bilbioteca
+ * switchType: 0 -> Este tipo de switch levanta durante un momento
+ *                  un voltaje positivo, por lo que es necesario que
+ *                  el sistema solo reaccione a pulsos positivos.
+ *             1 -> Este tipo de switch mantiene su estado, por lo que es
+ *                  necesario que el sistema reaccione a pulsos negativos
+ *                  y positivos.
 **/
-int smhSetup();
+int smhSetup(int switchType);
 
 /**
  * Funcion que establece la interrupcion al detectar
  * un cambio en el pin de una puerta
  * pin: numero de wPi que corresponde al pin 
  *      de una puerta
+ * switchType: 0 -> switch pulsador
+ *             1 -> switch que mantiene su estado
+ * interrupt: puntero a la funcion de la interrupcion
+ *            que se debe ejecutar al detectar un cambio
 **/
-void setDoorISR(int pin);
+void setDoorISR(int pin, int switchType, void *interrupt);
 
 /**
  * Funcion que se ejecuta cuando se levanta una
  * interrupcion por el cambio de estado de una
  * puerta
 **/
-void doorInterrupt(void);
+void frontdoorInterrupt(void);
+void backdoorInterrupt(void);
+void bathroomdoorInterrupt(void);
+void room1doorInterrupt(void);
+void room2doorInterrupt(void);
+void doorInterrupt(int id, int pin);
+
+/**
+ * Funcion lee el valor de los pines de las puertas para
+ * establecer su valor inicial en la lista de puertas
+**/
+void setDoorInitialState();
 
 /**
  * Funcion que obtiene el estado de las puertas
