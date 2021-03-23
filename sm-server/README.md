@@ -2,7 +2,11 @@
 
 Este proyecto utiliza CMake para realizar la compilación del software.
 
-## Instalación Pistache
+## Instalacion Curl
+$ sudo apt update
+$ sudo apt-get install libcurl4-openssl-dev
+
+## Instalacion Pistache
 
 ### Ubuntu PPA (Unstable)
 
@@ -37,15 +41,6 @@ $ make install
 ```console
 $ sudo apt-get update
 $ sudo apt-get install rapidjson-dev
-```
-
-## Instalacion de Websocketpp
-
-```console
-$ git clone https://github.com/zaphoyd/websocketpp.git && cd websocketpp
-$ mkdir build && cd build
-$ cmake -DCMAKE_INSTALL_PREFIX=/opt/websocketpp ..
-$ sudo cmake --build . --target install
 ```
 
 ## Instalacion de Boost
