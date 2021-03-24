@@ -19,7 +19,9 @@ using namespace rapidjson;
 #include "./src/fileHandler.cpp"
 #include "./src/encrypting.cpp"
 
-//#include <smarthouse.h>
+extern "C" {
+  #include <smarthouse.h>
+}
 
 #include <boost/beast/core.hpp>
 #include <boost/beast/websocket.hpp>
@@ -277,7 +279,7 @@ class HomeEndpoint
           if(it->id == id_int)
           {
             it->state = !it->state;
-            //changeBulbState(it->id, it->state);
+            changeBulbState(it->id, it->state);
           }
         }
         for (it = Home::home->lightList.begin(); it != Home::home->lightList.end(); ++it)
@@ -313,7 +315,7 @@ class HomeEndpoint
         for (it = Home::home->lightList.begin(); it != Home::home->lightList.end(); ++it)
         {
           it->state = state_int;
-          //changeBulbState(it->id, it->state);
+          changeBulbState(it->id, it->state);
           cout << "Id Luz: " << it->id << " Estado: " << it->state << endl;
         }
         configReponse(&response);
@@ -408,11 +410,11 @@ class HomeEndpoint
 //
 void *start_smartHouse(void *input)
 {
-  //smhSetup(0);
+  smhSetup(0);
   while(1)
   {
     int doors [5] = {0};
-    //getDoorsStatus(doors);
+    getDoorsStatus(doors);
     list<Door>::iterator it;
     int i = 0;
     for (it = Home::home->doorList.begin(); it != Home::home->doorList.end(); ++it)
@@ -456,7 +458,7 @@ void websocketServer(tcp::socket socket)
 
     for(;;)
     {
-      /**
+      
       pthread_mutex_lock(&updateMutex);
       while(!update)
       {
@@ -464,7 +466,7 @@ void websocketServer(tcp::socket socket)
       }
       update = 0;
       pthread_mutex_unlock(&updateMutex);
-      **/
+      
       ws.write(net::buffer(std::string("Update")));
       sleep(2);
     }
@@ -517,9 +519,9 @@ int main(int argc, char *argv[])
 
   pthread_create(&thread1, NULL, start_restEndpoint, NULL);
   pthread_create(&thread2, NULL, start_websocketEndpoint, NULL);
-  //pthread_create(&thread3, NULL, start_smartHouse, NULL);
+  pthread_create(&thread3, NULL, start_smartHouse, NULL);
 
   pthread_join(thread1, NULL);
   pthread_join(thread2, NULL);
-  //pthread_join(thread3, NULL);
+  pthread_join(thread3, NULL);
 }

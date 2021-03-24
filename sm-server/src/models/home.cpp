@@ -22,12 +22,12 @@ class Home {
         **/
         Home()
         {
-            LightBulb light1(1,"Luz Cocina", 0);
-            LightBulb light2(2,"Luz Sala",0);
-            LightBulb light3(3,"Luz Baño", 0);
-            LightBulb light4(4,"Luz Cuarto 1",0);
-            LightBulb light5(5,"Luz Cuarto 2",0);
-            LightBulb light6(6,"Luz Comedor", 0);
+            LightBulb light1(0,"Luz Cocina", 0);
+            LightBulb light2(1,"Luz Sala",0);
+            LightBulb light3(2,"Luz Baño", 0);
+            LightBulb light4(3,"Luz Cuarto 1",0);
+            LightBulb light5(4,"Luz Cuarto 2",0);
+            LightBulb light6(5,"Luz Comedor", 0);
             this->lightList = {light1, light2, light3, light4, light5, light6};
             
             Door door1(1,"Puerta Frontal",0);
