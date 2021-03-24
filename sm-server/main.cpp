@@ -19,6 +19,8 @@ using namespace rapidjson;
 #include "./src/fileHandler.cpp"
 #include "./src/encrypting.cpp"
 
+//#include <smarthouse.h>
+
 #include <boost/beast/core.hpp>
 #include <boost/beast/websocket.hpp>
 #include <boost/asio/ip/tcp.hpp>
@@ -32,6 +34,9 @@ namespace websocket = beast::websocket; // from <boost/beast/websocket.hpp>
 namespace net = boost::asio;            // from <boost/asio.hpp>
 using tcp = boost::asio::ip::tcp;       // from <boost/asio/ip/tcp.hpp>
 
+int update = 0;
+pthread_mutex_t updateMutex = PTHREAD_MUTEX_INITIALIZER;
+pthread_cond_t updateCond = PTHREAD_COND_INITIALIZER;
 
 class HomeEndpoint 
 {
@@ -76,7 +81,6 @@ class HomeEndpoint
       Routes::Get(router, "/camera", Routes::bind(&HomeEndpoint::getCamera, this));
       Routes::Get(router, "/user", Routes::bind(&HomeEndpoint::getUser, this));
       Routes::Put(router, "/light/:id", Routes::bind(&HomeEndpoint::putLight, this));
-      Routes::Put(router, "/door/:id", Routes::bind(&HomeEndpoint::putDoor, this));
       Routes::Put(router, "/user", Routes::bind(&HomeEndpoint::putUser, this));
       Routes::Post(router, "/user", Routes::bind(&HomeEndpoint::postUser, this));
     }
@@ -97,30 +101,39 @@ class HomeEndpoint
      * return: 0 si el token del request coincide con el token de usuario
      *         1 si el token del request no coincide con el token de usuario
     **/
-    int verifyToken(string &header)
+    int verifyToken(const Rest::Request& request)
     {
-      //Se obtiene el token del header del request
-      string word = "Basic ";
-      auto n = header.find(word);
-      if (n != std::string::npos)
+      try
       {
-          header.erase(n, word.length());
+        auto header = request.headers().getRaw("Authorization").value();
+        //Se obtiene el token del header del request
+        string word = "Basic ";
+        auto n = header.find(word);
+        if (n != std::string::npos)
+        {
+            header.erase(n, word.length());
+        }
+        
+        //Se obtiene el token del json del file
+        string userjson = FileHandler::readFile("userjson.txt");
+        Document doc;
+        doc.Parse(userjson.c_str());
+        string userEmail = doc["email"].GetString();
+        string userPassword = doc["password"].GetString();
+        string token = userEmail + ":" + userPassword;
+        string encode = base64_encode((const unsigned char*)token.c_str(), token.length());
+
+        //Se verifica si los tokens son iguales
+        if (encode == header)
+          return 0;
+        else
+          return 1;
+      }
+      catch(const std::exception& e)
+      {
+        return 1;
       }
       
-      //Se obtiene el token del json del file
-      string userjson = FileHandler::readFile("userjson.txt");
-      Document doc;
-      doc.Parse(userjson.c_str());
-      string userEmail = doc["email"].GetString();
-      string userPassword = doc["password"].GetString();
-      string token = userEmail + ":" + userPassword;
-      string encode = base64_encode((const unsigned char*)token.c_str(), token.length());
-
-      //Se verifica si los tokens son iguales
-      if (encode == header)
-        return 0;
-      else
-        return 1;
     }
 
     /**
@@ -130,8 +143,7 @@ class HomeEndpoint
     **/
     void getLight(const Rest::Request& request, Http::ResponseWriter response)
     { 
-      auto enc_str = request.headers().getRaw("Authorization").value();
-      int verify = verifyToken(enc_str);
+      int verify = verifyToken(request);
 
       if (verify == 0)
       {
@@ -162,8 +174,7 @@ class HomeEndpoint
     **/
     void getDoor(const Rest::Request& request, Http::ResponseWriter response)
     { 
-      auto enc_str = request.headers().getRaw("Authorization").value();
-      int verify = verifyToken(enc_str);
+      int verify = verifyToken(request);
 
       if (verify == 0)
       {
@@ -194,8 +205,7 @@ class HomeEndpoint
     **/
     void getCamera(const Rest::Request& request, Http::ResponseWriter response)
     { 
-      auto enc_str = request.headers().getRaw("Authorization").value();
-      int verify = verifyToken(enc_str);
+      int verify = verifyToken(request);
 
       if(verify == 0)
       { 
@@ -231,8 +241,7 @@ class HomeEndpoint
     **/
     void getUser(const Rest::Request& request, Http::ResponseWriter response)
     { 
-      auto enc_str = request.headers().getRaw("Authorization").value();
-      int verify = verifyToken(enc_str);
+      int verify = verifyToken(request);
 
       if (verify == 0)
       {
@@ -254,8 +263,7 @@ class HomeEndpoint
     **/
     void putLight(const Rest::Request& request, Http::ResponseWriter response)
     {
-      auto enc_str = request.headers().getRaw("Authorization").value();
-      int verify = verifyToken(enc_str);
+      int verify = verifyToken(request);
 
       if (verify == 0)
       {
@@ -286,51 +294,13 @@ class HomeEndpoint
     }
 
     /**
-     * Metodo para modificar los datos de la puertas
-     * request: solicitud http recibida
-     * response: respuesta del metodo de confirmacion
-    **/
-    void putDoor(const Rest::Request& request, Http::ResponseWriter response)
-    { 
-      auto enc_str = request.headers().getRaw("Authorization").value();
-      int verify = verifyToken(enc_str);
-
-      if (verify == 0)
-      {
-        auto id = request.param(":id").as<std::string>();
-        int id_int = stoi(id);
-        Guard guard(homeLock);
-        list<Door>::iterator it;
-        for (it = Home::home->doorList.begin(); it != Home::home->doorList.end(); ++it)
-        {
-          if(it->id == id_int)
-          {
-            it->state = !it->state;
-          }
-        }
-        for (it = Home::home->doorList.begin(); it != Home::home->doorList.end(); ++it)
-        {
-          cout << "Id Puerta: " << it->id << " Estado: " << it->state << endl;
-        }
-        configReponse(&response);
-        response.send(Http::Code::Ok);
-      }
-      else
-      {
-        configReponse(&response);
-        response.send(Http::Code::Unauthorized);
-      }
-    }
-
-    /**
      * Metodo para modificar los datos del usuario
      * request: solicitud http recibida
      * response: respuesta del metodo de confirmacion
     **/
     void putUser(const Rest::Request& request, Http::ResponseWriter response)
     { 
-      auto enc_str = request.headers().getRaw("Authorization").value();
-      int verify = verifyToken(enc_str);
+      int verify = verifyToken(request);
 
       if (verify == 0)
       {
@@ -341,7 +311,6 @@ class HomeEndpoint
         Home::home->user.name = doc["name"].GetString();
         Home::home->user.email = doc["email"].GetString();
         Home::home->user.password = doc["password"].GetString();
-        Home::home->user.token = enc_str;
 
         string result = Home::home->user.serialize();
         cout << result << endl;
@@ -398,9 +367,37 @@ class HomeEndpoint
     Rest::Router router;
 };
 
+//
+void *start_smartHouse(void *input)
+{
+  //smhSetup(0);
+  while(1)
+  {
+    int doors [5] = {0};
+    //getDoorsStatus(doors);
+    list<Door>::iterator it;
+    int i = 0;
+    for (it = Home::home->doorList.begin(); it != Home::home->doorList.end(); ++it)
+    {
+      it->state = doors[i];
+      i++;
+    }
+    pthread_mutex_lock(&updateMutex);
+    update = 1;
+    pthread_cond_broadcast(&updateCond);
+    pthread_mutex_unlock(&updateMutex);
+    /**
+    for (it = Home::home->doorList.begin(); it != Home::home->doorList.end(); ++it)
+    {
+      cout << "Id Puerta: " << it->id << " Estado: " << it->state << endl;
+    }
+    **/
+  }
+}
+
 void *start_restEndpoint(void *input) 
 {
-  Port port(9080);
+  Port port(9082);
   int thr = 2;
   Address addr(Ipv4::any(), port);
   HomeEndpoint home(addr);
@@ -412,23 +409,35 @@ void *start_restEndpoint(void *input)
 
 void websocketServer(tcp::socket socket)
 {
-  // Construct the stream by moving in the socket
-  websocket::stream<tcp::socket> ws{std::move(socket)};
-
-  // Accept the websocket handshake
-  ws.accept();
-
-  for(;;)
+  while(1)
   {
-    // This buffer will hold the incoming message
-    beast::flat_buffer buffer;
-    // Read a message
-    ws.read(buffer);
-    //Print the message
-    std::cout << beast::buffers_to_string(buffer.data()) << std::endl;
-    //Echo the message back
-    ws.text(ws.got_text());
-    ws.write(buffer.data());
+    try
+    {
+      // Construct the stream by moving in the socket
+      websocket::stream<tcp::socket> ws{std::move(socket)};
+
+      // Accept the websocket handshake
+      ws.accept();
+
+      for(;;)
+      {
+        /**
+        pthread_mutex_lock(&updateMutex);
+        while(!update)
+        {
+          pthread_cond_wait(&updateCond, &updateMutex);
+        }
+        update = 0;
+        pthread_mutex_unlock(&updateMutex);
+        **/
+        ws.write(net::buffer(std::string("Update")));
+        sleep(2);
+      }
+    }
+    catch(const std::exception& e)
+    {
+      cout << "Se desconecto el cliente" << endl;
+    }
   }
 }
 
@@ -459,11 +468,13 @@ void *start_websocketEndpoint(void *input)
 
 int main(int argc, char *argv[]) 
 {
-  pthread_t thread1, thread2;
+  pthread_t thread1, thread2, thread3;
 
   pthread_create(&thread1, NULL, start_restEndpoint, NULL);
   pthread_create(&thread2, NULL, start_websocketEndpoint, NULL);
+  //pthread_create(&thread3, NULL, start_smartHouse, NULL);
 
   pthread_join(thread1, NULL);
   pthread_join(thread2, NULL);
+  //pthread_join(thread3, NULL);
 }

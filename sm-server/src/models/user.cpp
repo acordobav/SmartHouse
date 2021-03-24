@@ -1,6 +1,9 @@
 #include <string>
-
 using namespace std;
+
+#include "rapidjson/writer.h"
+#include "rapidjson/stringbuffer.h"
+using namespace rapidjson;
 
 class User {
     public:
@@ -8,17 +11,15 @@ class User {
         string name;        //Atributo de nombre
         string email;       //Atributo de correo electronico
         string password;    //Atributo de contrasena
-        string token;       //Atributo de token
         
         /**
          * Constructor de la clase User
         **/
-        User (string name = "", string email = "", string password = "", string token = "")
+        User (string name = "", string email = "", string password = "")
         {
             name = name;
             email = email;
             password = password;
-            token = token;
         }
 
         /**
