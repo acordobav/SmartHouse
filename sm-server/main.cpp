@@ -81,6 +81,7 @@ class HomeEndpoint
       Routes::Get(router, "/camera", Routes::bind(&HomeEndpoint::getCamera, this));
       Routes::Get(router, "/user", Routes::bind(&HomeEndpoint::getUser, this));
       Routes::Put(router, "/light/:id", Routes::bind(&HomeEndpoint::putLight, this));
+      Routes::Put(router, "/lights/:state", Routes::bind(&HomeEndpoint::putLights, this));
       Routes::Put(router, "/user", Routes::bind(&HomeEndpoint::putUser, this));
       Routes::Post(router, "/user", Routes::bind(&HomeEndpoint::postUser, this));
     }
@@ -257,7 +258,7 @@ class HomeEndpoint
     }
 
     /**
-     * Metodo para modificar los datos de la luces
+     * Metodo para encender o apagar una luz
      * request: solicitud http recibida
      * response: respuesta del metodo de confirmacion
     **/
@@ -276,6 +277,7 @@ class HomeEndpoint
           if(it->id == id_int)
           {
             it->state = !it->state;
+            //changeBulbState(it->id, it->state);
           }
         }
         for (it = Home::home->lightList.begin(); it != Home::home->lightList.end(); ++it)
@@ -292,6 +294,40 @@ class HomeEndpoint
       }
       
     }
+
+    /**
+     * Metodo para encender o apagar todas las luces
+     * request: solicitud http recibida
+     * response: respuesta del metodo de confirmacion
+    **/
+    void putLights(const Rest::Request& request, Http::ResponseWriter response)
+    {
+      int verify = verifyToken(request);
+
+      if (verify == 0)
+      {
+        auto state = request.param(":state").as<std::string>();
+        int state_int = stoi(state);
+        Guard guard(homeLock);
+        list<LightBulb>::iterator it;
+        for (it = Home::home->lightList.begin(); it != Home::home->lightList.end(); ++it)
+        {
+          it->state = state_int;
+          //changeBulbState(it->id, it->state);
+          cout << "Id Luz: " << it->id << " Estado: " << it->state << endl;
+        }
+        configReponse(&response);
+        response.send(Http::Code::Ok);
+      }
+      else
+      {
+        configReponse(&response);
+        response.send(Http::Code::Unauthorized);
+      }
+      
+    }
+
+
 
     /**
      * Metodo para modificar los datos del usuario
@@ -325,6 +361,8 @@ class HomeEndpoint
         response.send(Http::Code::Unauthorized);
       }
     }
+
+    
 
     /**
      * Metodo para verificar y obtener el token del usuario
@@ -409,36 +447,34 @@ void *start_restEndpoint(void *input)
 
 void websocketServer(tcp::socket socket)
 {
-  while(1)
+  // Construct the stream by moving in the socket
+  websocket::stream<tcp::socket> ws{std::move(socket)};
+  try
   {
-    try
+    // Accept the websocket handshake
+    ws.accept();
+
+    for(;;)
     {
-      // Construct the stream by moving in the socket
-      websocket::stream<tcp::socket> ws{std::move(socket)};
-
-      // Accept the websocket handshake
-      ws.accept();
-
-      for(;;)
+      /**
+      pthread_mutex_lock(&updateMutex);
+      while(!update)
       {
-        /**
-        pthread_mutex_lock(&updateMutex);
-        while(!update)
-        {
-          pthread_cond_wait(&updateCond, &updateMutex);
-        }
-        update = 0;
-        pthread_mutex_unlock(&updateMutex);
-        **/
-        ws.write(net::buffer(std::string("Update")));
-        sleep(2);
+        pthread_cond_wait(&updateCond, &updateMutex);
       }
+      update = 0;
+      pthread_mutex_unlock(&updateMutex);
+      **/
+      ws.write(net::buffer(std::string("Update")));
+      sleep(2);
     }
-    catch(const std::exception& e)
-    {
-      cout << "Se desconecto el cliente" << endl;
-    }
+    /* code */
   }
+  catch(const std::exception& e)
+  {
+    cout << "Se desconecto el cliente" << endl;
+  }
+  
 }
 
 void *start_websocketEndpoint(void *input)
@@ -449,21 +485,30 @@ void *start_websocketEndpoint(void *input)
   // The io_context is required for all I/O
   net::io_context ioc{1};
 
-  // The acceptor receives incoming connections
-  tcp::acceptor acceptor{ioc, {address, port}};
-  for(;;)
+  while(1)
   {
-      // This will receive the new connection
-      tcp::socket socket{ioc};
+    try
+    {
+      // The acceptor receives incoming connections
+      tcp::acceptor acceptor{ioc, {address, port}};
+      for(;;)
+      {
+          // This will receive the new connection
+          tcp::socket socket{ioc};
 
-      // Block until we get a connection
-      acceptor.accept(socket);
+          // Block until we get a connection
+          acceptor.accept(socket);
 
-      // Launch the session, transferring ownership of the socket
-      std::thread(
-          &websocketServer,
-          std::move(socket)).detach();
+          // Launch the session, transferring ownership of the socket
+          std::thread(&websocketServer, std::move(socket)).detach();
+      }
+    }
+    catch(const std::exception& e)
+    {
+      cout << "Se desconecto el cliente" << endl;
+    }
   }
+    
 }
 
 int main(int argc, char *argv[]) 
