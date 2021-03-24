@@ -474,7 +474,6 @@ void websocketServer(tcp::socket socket)
   {
     cout << "Se desconecto el cliente" << endl;
   }
-  
 }
 
 void *start_websocketEndpoint(void *input)
@@ -509,6 +508,11 @@ void *start_websocketEndpoint(void *input)
     }
   }
     
+}
+
+void createFile()
+{
+  
 }
 
 int main(int argc, char *argv[]) 

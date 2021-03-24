@@ -22,19 +22,19 @@ class Home {
         **/
         Home()
         {
-            LightBulb light1(1,"Luz Cocina", 0);
-            LightBulb light2(2,"Luz Sala",0);
-            LightBulb light3(3,"Luz Baño", 0);
-            LightBulb light4(4,"Luz Cuarto 1",0);
-            LightBulb light5(5,"Luz Cuarto 2",0);
-            LightBulb light6(6,"Luz Comedor", 0);
+            LightBulb light1(0,"Luz Cocina", 0);
+            LightBulb light2(1,"Luz Sala",0);
+            LightBulb light3(2,"Luz Baño", 0);
+            LightBulb light4(3,"Luz Cuarto 1",0);
+            LightBulb light5(4,"Luz Cuarto 2",0);
+            LightBulb light6(5,"Luz Comedor", 0);
             this->lightList = {light1, light2, light3, light4, light5, light6};
             
-            Door door1(1,"Puerta Frontal",0);
-            Door door2(2,"Puerta Trasera",0);
-            Door door3(3,"Puerta Baño",0);
-            Door door4(4,"Puerta Cuarto 1",0);
-            Door door5(5,"Puerta Cuarto 2", 0);
+            Door door1(0,"Puerta Frontal",0);
+            Door door2(1,"Puerta Trasera",0);
+            Door door3(2,"Puerta Baño",0);
+            Door door4(3,"Puerta Cuarto 1",0);
+            Door door5(4,"Puerta Cuarto 2", 0);
             this->doorList = {door1, door2, door3, door4, door5};
 
             this->camera.location = "Jardin";
