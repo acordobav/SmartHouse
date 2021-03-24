@@ -425,7 +425,7 @@ void websocketServer(tcp::socket socket)
     // Read a message
     ws.read(buffer);
     //Print the message
-    std::cout << beast::make_printable(buffer.data()) << std::endl;
+    std::cout << beast::buffers_to_string(buffer.data()) << std::endl;
     //Echo the message back
     ws.text(ws.got_text());
     ws.write(buffer.data());
@@ -434,7 +434,7 @@ void websocketServer(tcp::socket socket)
 
 void *start_websocketEndpoint(void *input)
 {
-  auto const address = net::ip::make_address("10.0.2.15");
+  auto const address = net::ip::make_address("127.0.0.1");
   auto const port = static_cast<unsigned short>(9081);
 
   // The io_context is required for all I/O
