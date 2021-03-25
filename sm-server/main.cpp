@@ -77,6 +77,7 @@ class HomeEndpoint
       using namespace Rest;
 
       Routes::Get(router, "/light", Routes::bind(&HomeEndpoint::getLight, this));
+      Routes::Options(router, "/door", Routes::bind(&HomeEndpoint::optionsDoor, this));
       Routes::Get(router, "/door", Routes::bind(&HomeEndpoint::getDoor, this));
       Routes::Get(router, "/camera", Routes::bind(&HomeEndpoint::getCamera, this));
       Routes::Get(router, "/user", Routes::bind(&HomeEndpoint::getUser, this));
@@ -84,6 +85,7 @@ class HomeEndpoint
       Routes::Put(router, "/lights/:state", Routes::bind(&HomeEndpoint::putLights, this));
       Routes::Put(router, "/user", Routes::bind(&HomeEndpoint::putUser, this));
       Routes::Post(router, "/user", Routes::bind(&HomeEndpoint::postUser, this));
+      Routes::Post(router, "/camera", Routes::bind(&HomeEndpoint(::postCamera, this)));
     }
 
     /**
@@ -137,6 +139,11 @@ class HomeEndpoint
       
     }
 
+    void optionsDoor(const Rest::Request& request, Http::ResponseWriter response)
+    {
+      configReponse(&response);
+      response.send(Http::Code::Ok);
+    }
     /**
      * Metodo para obtener la lista de luces de la casa
      * request: solicitud http recibida
@@ -208,9 +215,11 @@ class HomeEndpoint
     { 
       int verify = verifyToken(request);
 
+      string imageName = Home::home->camera.last_photo;
+
       if(verify == 0)
       { 
-        ifstream imageFile("jardin.jpg", ifstream::binary);
+        ifstream imageFile(imageName, ifstream::binary);
         if (imageFile)
         { 
           imageFile.seekg(0, imageFile.end);
@@ -327,8 +336,6 @@ class HomeEndpoint
       
     }
 
-
-
     /**
      * Metodo para modificar los datos del usuario
      * request: solicitud http recibida
@@ -390,6 +397,29 @@ class HomeEndpoint
         string encode = base64_encode((const unsigned char*)token.c_str(), token.length());
         configReponse(&response);
         response.send(Http::Code::Ok, encode);
+      }
+      else
+      {
+        configReponse(&response);
+        response.send(Http::Code::Unauthorized);
+      }
+    }
+
+    /**
+     * Metodo para notificar al sistema que tome una foto
+     * request: solicitud http recibida
+     * response: respuesta del metodo con el token del usuario
+    **/
+    void postCamera(const Rest::Request& request, Http::ResponseWriter response)
+    { 
+      int verify = verifyToken(request);
+
+      if (verify == 0)
+      {
+        //Tomar una foto
+
+        configReponse(&response);
+        response.send(Http::Code::Ok);
       }
       else
       {
@@ -510,20 +540,48 @@ void *start_websocketEndpoint(void *input)
     
 }
 
-void createFile()
+/**
+ * Metodo que se encarga de crear un file con el json de user si no
+ * existe uno previo. Si ya existe no crea ningun file.
+ * filename: nombre del archivo a crear.
+**/
+void createFile(string filename)
 {
+  ifstream fileRead;
+  fileRead.open(filename);
+  if(fileRead)
+  {
+    //Existe el file
+    fileRead.close();
+  }
+  else
+  {
+    //No existe el file
+    Home::home->user.name = "admin";
+    Home::home->user.email = "admin@admin";
+    Home::home->user.password = "password";
+    string content = Home::home->user.serialize();
+    ofstream fileWrite;
+    fileWrite.open(filename);
+    if (fileWrite.is_open())
+    {
+      fileWrite << content;
+      fileWrite.close();
+    }
+  }
   
 }
 
-int main(int argc, char *argv[]) 
+int main(int argc, char *argv[])
 {
+  createFile("userjson.txt");
   pthread_t thread1, thread2, thread3;
 
   pthread_create(&thread1, NULL, start_restEndpoint, NULL);
   pthread_create(&thread2, NULL, start_websocketEndpoint, NULL);
-  //pthread_create(&thread3, NULL, start_smartHouse, NULL);
+  pthread_create(&thread3, NULL, start_smartHouse, NULL);
 
   pthread_join(thread1, NULL);
   pthread_join(thread2, NULL);
-  //pthread_join(thread3, NULL);
+  pthread_join(thread3, NULL);
 }
