@@ -1,4 +1,5 @@
 export const environment = {
   production: true,
-  restapiUrl: '192.168.1.200:9082',
+  restapiUrl: 'http://192.168.1.200:9082',
+  webSocketURL: 'ws://192.168.1.200:9081',
 };
