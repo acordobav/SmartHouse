@@ -30,11 +30,11 @@ class Home {
             LightBulb light6(5,"Luz Comedor", 0);
             this->lightList = {light1, light2, light3, light4, light5, light6};
             
-            Door door1(1,"Puerta Frontal",0);
-            Door door2(2,"Puerta Trasera",0);
-            Door door3(3,"Puerta Baño",0);
-            Door door4(4,"Puerta Cuarto 1",0);
-            Door door5(5,"Puerta Cuarto 2", 0);
+            Door door1(0,"Puerta Frontal",0);
+            Door door2(1,"Puerta Trasera",0);
+            Door door3(2,"Puerta Baño",0);
+            Door door4(3,"Puerta Cuarto 1",0);
+            Door door5(4,"Puerta Cuarto 2", 0);
             this->doorList = {door1, door2, door3, door4, door5};
 
             this->camera.location = "Jardin";
