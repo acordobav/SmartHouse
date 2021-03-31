@@ -79,7 +79,6 @@ class HomeEndpoint
       using namespace Rest;
 
       Routes::Get(router, "/light", Routes::bind(&HomeEndpoint::getLight, this));
-      Routes::Options(router, "/door", Routes::bind(&HomeEndpoint::optionsDoor, this));
       Routes::Get(router, "/door", Routes::bind(&HomeEndpoint::getDoor, this));
       Routes::Get(router, "/camera", Routes::bind(&HomeEndpoint::getCamera, this));
       Routes::Get(router, "/user", Routes::bind(&HomeEndpoint::getUser, this));
