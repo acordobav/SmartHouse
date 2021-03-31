@@ -1,3 +1,4 @@
 export const environment = {
-  production: true
+  production: true,
+  restapiUrl: '192.168.1.200:9082',
 };
