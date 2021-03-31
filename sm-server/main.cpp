@@ -93,7 +93,7 @@ class HomeEndpoint
      * Metodo para configurar la respuesta del request
      * response: respuesta del metodo
     **/
-    void configReponse(Http::ResponseWriter* response, string hostIp) 
+    void configReponse(Http::ResponseWriter* response) 
     {
       //response->headers().add<Pistache::Http::Header::AccessControlAllowOrigin>("http://" + host);
       response->headers().add<Pistache::Http::Header::AccessControlAllowOrigin>("*");
@@ -105,7 +105,7 @@ class HomeEndpoint
 
     void optionsDoor(const Rest::Request& request, Http::ResponseWriter response)
     {
-      configReponse(&response, request.address().host());
+      configReponse(&response);
       response.send(Http::Code::Ok);
     }
 
@@ -171,12 +171,12 @@ class HomeEndpoint
         result = result.substr(0, result.size()-1);
         result = result + "]";
       
-        configReponse(&response, request.address().host());
+        configReponse(&response);
         response.send(Http::Code::Ok, result);
       }
       else
       {
-        configReponse(&response, request.address().host());
+        configReponse(&response);
         response.send(Http::Code::Unauthorized);
       }
     }
@@ -202,12 +202,12 @@ class HomeEndpoint
         result = result.substr(0, result.size()-1);
         result = result + "]";
       
-        configReponse(&response, request.address().host());
+        configReponse(&response);
         response.send(Http::Code::Ok, result);
       }
       else
       {
-        configReponse(&response, request.address().host());
+        configReponse(&response);
         response.send(Http::Code::Unauthorized);
       }
     }
@@ -238,12 +238,12 @@ class HomeEndpoint
           delete[] buffer;
         }
         string result = Home::home->camera.serialize();
-        configReponse(&response, request.address().host());
+        configReponse(&response);
         response.send(Http::Code::Ok, result);
       }
       else
       {
-        configReponse(&response, request.address().host());
+        configReponse(&response);
         response.send(Http::Code::Unauthorized);
       }
     }
@@ -260,12 +260,12 @@ class HomeEndpoint
       if (verify == 0)
       {
         string result = FileHandler::readFile("userjson.txt");
-        configReponse(&response, request.address().host());
+        configReponse(&response);
         response.send(Http::Code::Ok, result);
       }
       else
       {
-        configReponse(&response, request.address().host());
+        configReponse(&response);
         response.send(Http::Code::Unauthorized);
       }
     }
@@ -297,12 +297,12 @@ class HomeEndpoint
         {
           cout << "Id Luz: " << it->id << " Estado: " << it->state << endl;
         }
-        configReponse(&response, request.address().host());
+        configReponse(&response);
         response.send(Http::Code::Ok);
       }
       else
       {
-        configReponse(&response, request.address().host());
+        configReponse(&response);
         response.send(Http::Code::Unauthorized);
       }
       
@@ -329,12 +329,12 @@ class HomeEndpoint
           changeBulbState(it->id, it->state);
           cout << "Id Luz: " << it->id << " Estado: " << it->state << endl;
         }
-        configReponse(&response, request.address().host());
+        configReponse(&response);
         response.send(Http::Code::Ok);
       }
       else
       {
-        configReponse(&response, request.address().host());
+        configReponse(&response);
         response.send(Http::Code::Unauthorized);
       }
       
@@ -365,12 +365,12 @@ class HomeEndpoint
         cout << result << endl;
         FileHandler::writeFile("userjson.txt", result);
 
-        configReponse(&response, request.address().host());
+        configReponse(&response);
         response.send(Http::Code::Ok);
       }
       else
       {
-        configReponse(&response, request.address().host());
+        configReponse(&response);
         response.send(Http::Code::Unauthorized);
       }
     }
@@ -401,12 +401,12 @@ class HomeEndpoint
       {
         string token = userEmail + ":" + userPassword;
         string encode = base64_encode((const unsigned char*)token.c_str(), token.length());
-        configReponse(&response, request.address().host());
+        configReponse(&response);
         response.send(Http::Code::Ok, encode);
       }
       else
       {
-        configReponse(&response, request.address().host());
+        configReponse(&response);
         response.send(Http::Code::Unauthorized);
       }
     }
