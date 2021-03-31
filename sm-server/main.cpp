@@ -86,16 +86,27 @@ class HomeEndpoint
       Routes::Put(router, "/lights/:state", Routes::bind(&HomeEndpoint::putLights, this));
       Routes::Put(router, "/user", Routes::bind(&HomeEndpoint::putUser, this));
       Routes::Post(router, "/user", Routes::bind(&HomeEndpoint::postUser, this));
+      Routes::Options(router, "/door", Routes::bind(&HomeEndpoint::optionsDoor, this));
     }
 
     /**
      * Metodo para configurar la respuesta del request
      * response: respuesta del metodo
     **/
-    void configReponse(Http::ResponseWriter* response) 
+    void configReponse(Http::ResponseWriter* response, string hostIp) 
     {
+      //response->headers().add<Pistache::Http::Header::AccessControlAllowOrigin>("http://" + host);
       response->headers().add<Pistache::Http::Header::AccessControlAllowOrigin>("*");
-      response->headers().add<Pistache::Http::Header::ContentType>("application/json");
+      response->headers().add<Pistache::Http::Header::ContentType>("application/json, text/plain, */*");
+      response->headers().add<Pistache::Http::Header::AccessControlAllowMethods>("GET, PUT, POST, DELETE, HEAD, OPTIONS, PATCH, PROPFIND, PROPPATCH, MKCOL, COPY, MOVE, LOCK");
+      response->headers().add<Pistache::Http::Header::AccessControlAllowHeaders>("access-control-allow-methods,authorization,Content-Length,Connection,Access-Control-Allow-Origin,Origin ,Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers,X-Access-Token,XKey,Authorization");
+    
+    }
+
+    void optionsDoor(const Rest::Request& request, Http::ResponseWriter response)
+    {
+      configReponse(&response, request.address().host());
+      response.send(Http::Code::Ok);
     }
 
     /**
@@ -160,12 +171,12 @@ class HomeEndpoint
         result = result.substr(0, result.size()-1);
         result = result + "]";
       
-        configReponse(&response);
+        configReponse(&response, request.address().host());
         response.send(Http::Code::Ok, result);
       }
       else
       {
-        configReponse(&response);
+        configReponse(&response, request.address().host());
         response.send(Http::Code::Unauthorized);
       }
     }
@@ -191,12 +202,12 @@ class HomeEndpoint
         result = result.substr(0, result.size()-1);
         result = result + "]";
       
-        configReponse(&response);
+        configReponse(&response, request.address().host());
         response.send(Http::Code::Ok, result);
       }
       else
       {
-        configReponse(&response);
+        configReponse(&response, request.address().host());
         response.send(Http::Code::Unauthorized);
       }
     }
@@ -227,12 +238,12 @@ class HomeEndpoint
           delete[] buffer;
         }
         string result = Home::home->camera.serialize();
-        configReponse(&response);
+        configReponse(&response, request.address().host());
         response.send(Http::Code::Ok, result);
       }
       else
       {
-        configReponse(&response);
+        configReponse(&response, request.address().host());
         response.send(Http::Code::Unauthorized);
       }
     }
@@ -249,12 +260,12 @@ class HomeEndpoint
       if (verify == 0)
       {
         string result = FileHandler::readFile("userjson.txt");
-        configReponse(&response);
+        configReponse(&response, request.address().host());
         response.send(Http::Code::Ok, result);
       }
       else
       {
-        configReponse(&response);
+        configReponse(&response, request.address().host());
         response.send(Http::Code::Unauthorized);
       }
     }
@@ -286,12 +297,12 @@ class HomeEndpoint
         {
           cout << "Id Luz: " << it->id << " Estado: " << it->state << endl;
         }
-        configReponse(&response);
+        configReponse(&response, request.address().host());
         response.send(Http::Code::Ok);
       }
       else
       {
-        configReponse(&response);
+        configReponse(&response, request.address().host());
         response.send(Http::Code::Unauthorized);
       }
       
@@ -318,12 +329,12 @@ class HomeEndpoint
           changeBulbState(it->id, it->state);
           cout << "Id Luz: " << it->id << " Estado: " << it->state << endl;
         }
-        configReponse(&response);
+        configReponse(&response, request.address().host());
         response.send(Http::Code::Ok);
       }
       else
       {
-        configReponse(&response);
+        configReponse(&response, request.address().host());
         response.send(Http::Code::Unauthorized);
       }
       
@@ -354,12 +365,12 @@ class HomeEndpoint
         cout << result << endl;
         FileHandler::writeFile("userjson.txt", result);
 
-        configReponse(&response);
+        configReponse(&response, request.address().host());
         response.send(Http::Code::Ok);
       }
       else
       {
-        configReponse(&response);
+        configReponse(&response, request.address().host());
         response.send(Http::Code::Unauthorized);
       }
     }
@@ -390,12 +401,12 @@ class HomeEndpoint
       {
         string token = userEmail + ":" + userPassword;
         string encode = base64_encode((const unsigned char*)token.c_str(), token.length());
-        configReponse(&response);
+        configReponse(&response, request.address().host());
         response.send(Http::Code::Ok, encode);
       }
       else
       {
-        configReponse(&response);
+        configReponse(&response, request.address().host());
         response.send(Http::Code::Unauthorized);
       }
     }
