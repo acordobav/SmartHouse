@@ -86,7 +86,14 @@ class HomeEndpoint
       Routes::Put(router, "/lights/:state", Routes::bind(&HomeEndpoint::putLights, this));
       Routes::Put(router, "/user", Routes::bind(&HomeEndpoint::putUser, this));
       Routes::Post(router, "/user", Routes::bind(&HomeEndpoint::postUser, this));
-      Routes::Options(router, "/door", Routes::bind(&HomeEndpoint::optionsDoor, this));
+
+      // Options requests
+      Routes::Options(router, "/light", Routes::bind(&HomeEndpoint::options, this));
+      Routes::Options(router, "/door", Routes::bind(&HomeEndpoint::options, this));
+      Routes::Options(router, "/camera", Routes::bind(&HomeEndpoint::options, this));
+      Routes::Options(router, "/user", Routes::bind(&HomeEndpoint::options, this));
+      Routes::Options(router, "/light/:id", Routes::bind(&HomeEndpoint::options, this));
+      Routes::Options(router, "/lights/:state", Routes::bind(&HomeEndpoint::options, this));
     }
 
     /**
@@ -103,7 +110,7 @@ class HomeEndpoint
     
     }
 
-    void optionsDoor(const Rest::Request& request, Http::ResponseWriter response)
+    void options(const Rest::Request& request, Http::ResponseWriter response)
     {
       configReponse(&response);
       response.send(Http::Code::Ok);
