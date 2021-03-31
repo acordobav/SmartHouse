@@ -19,7 +19,9 @@ using namespace rapidjson;
 #include "./src/fileHandler.cpp"
 #include "./src/encrypting.cpp"
 
-//#include <smarthouse.h>
+extern "C" {
+  #include <smarthouse.h>
+}
 
 #include <boost/beast/core.hpp>
 #include <boost/beast/websocket.hpp>
@@ -77,7 +79,6 @@ class HomeEndpoint
       using namespace Rest;
 
       Routes::Get(router, "/light", Routes::bind(&HomeEndpoint::getLight, this));
-      Routes::Options(router, "/door", Routes::bind(&HomeEndpoint::optionsDoor, this));
       Routes::Get(router, "/door", Routes::bind(&HomeEndpoint::getDoor, this));
       Routes::Get(router, "/camera", Routes::bind(&HomeEndpoint::getCamera, this));
       Routes::Get(router, "/user", Routes::bind(&HomeEndpoint::getUser, this));
@@ -85,7 +86,14 @@ class HomeEndpoint
       Routes::Put(router, "/lights/:state", Routes::bind(&HomeEndpoint::putLights, this));
       Routes::Put(router, "/user", Routes::bind(&HomeEndpoint::putUser, this));
       Routes::Post(router, "/user", Routes::bind(&HomeEndpoint::postUser, this));
-      Routes::Post(router, "/camera", Routes::bind(&HomeEndpoint(::postCamera, this)));
+
+      // Options requests
+      Routes::Options(router, "/light", Routes::bind(&HomeEndpoint::options, this));
+      Routes::Options(router, "/door", Routes::bind(&HomeEndpoint::options, this));
+      Routes::Options(router, "/camera", Routes::bind(&HomeEndpoint::options, this));
+      Routes::Options(router, "/user", Routes::bind(&HomeEndpoint::options, this));
+      Routes::Options(router, "/light/:id", Routes::bind(&HomeEndpoint::options, this));
+      Routes::Options(router, "/lights/:state", Routes::bind(&HomeEndpoint::options, this));
     }
 
     /**
@@ -94,8 +102,18 @@ class HomeEndpoint
     **/
     void configReponse(Http::ResponseWriter* response) 
     {
+      //response->headers().add<Pistache::Http::Header::AccessControlAllowOrigin>("http://" + host);
       response->headers().add<Pistache::Http::Header::AccessControlAllowOrigin>("*");
-      response->headers().add<Pistache::Http::Header::ContentType>("application/json");
+      response->headers().add<Pistache::Http::Header::ContentType>("application/json, text/plain, */*");
+      response->headers().add<Pistache::Http::Header::AccessControlAllowMethods>("GET, PUT, POST, DELETE, HEAD, OPTIONS, PATCH, PROPFIND, PROPPATCH, MKCOL, COPY, MOVE, LOCK");
+      response->headers().add<Pistache::Http::Header::AccessControlAllowHeaders>("access-control-allow-methods,authorization,Content-Length,Connection,Access-Control-Allow-Origin,Origin ,Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers,X-Access-Token,XKey,Authorization");
+    
+    }
+
+    void options(const Rest::Request& request, Http::ResponseWriter response)
+    {
+      configReponse(&response);
+      response.send(Http::Code::Ok);
     }
 
     /**
@@ -139,11 +157,6 @@ class HomeEndpoint
       
     }
 
-    void optionsDoor(const Rest::Request& request, Http::ResponseWriter response)
-    {
-      configReponse(&response);
-      response.send(Http::Code::Ok);
-    }
     /**
      * Metodo para obtener la lista de luces de la casa
      * request: solicitud http recibida
@@ -286,7 +299,7 @@ class HomeEndpoint
           if(it->id == id_int)
           {
             it->state = !it->state;
-            //changeBulbState(it->id, it->state);
+            changeBulbState(it->id, it->state);
           }
         }
         for (it = Home::home->lightList.begin(); it != Home::home->lightList.end(); ++it)
@@ -322,7 +335,7 @@ class HomeEndpoint
         for (it = Home::home->lightList.begin(); it != Home::home->lightList.end(); ++it)
         {
           it->state = state_int;
-          //changeBulbState(it->id, it->state);
+          changeBulbState(it->id, it->state);
           cout << "Id Luz: " << it->id << " Estado: " << it->state << endl;
         }
         configReponse(&response);
@@ -438,11 +451,11 @@ class HomeEndpoint
 //
 void *start_smartHouse(void *input)
 {
-  //smhSetup(0);
+  smhSetup(0);
   while(1)
   {
     int doors [5] = {0};
-    //getDoorsStatus(doors);
+    getDoorsStatus(doors);
     list<Door>::iterator it;
     int i = 0;
     for (it = Home::home->doorList.begin(); it != Home::home->doorList.end(); ++it)
@@ -486,7 +499,7 @@ void websocketServer(tcp::socket socket)
 
     for(;;)
     {
-      /**
+      
       pthread_mutex_lock(&updateMutex);
       while(!update)
       {
@@ -494,7 +507,7 @@ void websocketServer(tcp::socket socket)
       }
       update = 0;
       pthread_mutex_unlock(&updateMutex);
-      **/
+      
       ws.write(net::buffer(std::string("Update")));
       sleep(2);
     }
