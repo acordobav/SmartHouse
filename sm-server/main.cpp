@@ -10,18 +10,20 @@ using namespace std;
 #include <pistache/router.h>
 using namespace Pistache;
 
-#include "rapidjson/writer.h"
-#include "rapidjson/stringbuffer.h"
-#include "rapidjson/document.h"
+#include <rapidjson/writer.h>
+#include <rapidjson/stringbuffer.h>
+#include <rapidjson/document.h>
 using namespace rapidjson;
 
 #include "./src/models/home.cpp"
 #include "./src/fileHandler.cpp"
 #include "./src/encrypting.cpp"
 
+
 extern "C" {
   #include <smarthouse.h>
 }
+
 
 #include <boost/beast/core.hpp>
 #include <boost/beast/websocket.hpp>
