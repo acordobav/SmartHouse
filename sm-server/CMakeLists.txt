@@ -9,8 +9,11 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -lpthread -lwiringPi")
 set(Pistache_FOUND 1)
 find_package(Pistache 0.0.2 REQUIRED PATHS /opt/pistache)
 
+# Find the RapidJSON library.
+include_directories(/opt/rapidjson/include)
+link_directories(/opt/rapidjson/lib)
+
 # Find the SmartHouse library
-# find_package(smarthouse REQUIRED PATHS /opt/smarthouse)
 INCLUDE_DIRECTORIES(/opt/smarthouse/include)
 LINK_DIRECTORIES(/opt/smarthouse/lib)
 
@@ -19,7 +22,8 @@ find_package(Boost 1.71.0 COMPONENTS program_options REQUIRED PATHS /opt/boost)
 include_directories( ${Boost_INCLUDE_DIR} )
 
 add_executable(sm-server main.cpp)
-target_link_libraries(${PROJECT_NAME} pistache_shared smarthouse) 
+target_link_libraries(${PROJECT_NAME} smarthouse) 
+target_link_libraries(${PROJECT_NAME} pistache_shared)
 target_link_libraries(${PROJECT_NAME} ${Boost_LIBRARIES})
 
 set(CPACK_PROJECT_NAME ${PROJECT_NAME})

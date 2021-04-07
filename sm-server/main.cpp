@@ -497,6 +497,7 @@ void websocketServer(tcp::socket socket)
     // Accept the websocket handshake
     ws.accept();
 
+    std::string message = "{\"update\":1}";
     for(;;)
     {
       
@@ -508,8 +509,7 @@ void websocketServer(tcp::socket socket)
       update = 0;
       pthread_mutex_unlock(&updateMutex);
       
-      ws.write(net::buffer(std::string("Update")));
-      sleep(2);
+      ws.write(net::buffer(message));
     }
     /* code */
   }
@@ -521,8 +521,7 @@ void websocketServer(tcp::socket socket)
 
 void *start_websocketEndpoint(void *input)
 {
-  auto const address = net::ip::make_address("127.0.0.1");
-  auto const port = static_cast<unsigned short>(9081);
+  using namespace boost::asio;
 
   // The io_context is required for all I/O
   net::io_context ioc{1};
@@ -532,7 +531,7 @@ void *start_websocketEndpoint(void *input)
     try
     {
       // The acceptor receives incoming connections
-      tcp::acceptor acceptor{ioc, {address, port}};
+      tcp::acceptor acceptor(ioc, ip::tcp::endpoint(ip::address(), 9081));
       for(;;)
       {
           // This will receive the new connection
