@@ -44,15 +44,18 @@ export class LoginFormComponent implements OnInit {
   
   private authenticateUser(email: string, password: string) {
     const loginData: LoginData = {email: email, password: password};
-    
-    //this.authService.login(loginData);
-    //.subscribe();
 
     if(email === "admin@newuser" && password === "password") {
       this.newUserEvent.emit();
     } else {
-      this.authService.login(loginData);
-      this.redirectToHome();
+      this.authService.login(loginData).subscribe(
+        (response) => {
+          this.redirectToHome();
+        },
+        (error) => {
+          this.errorMessage = "Credenciales inválidas.";
+        }
+      );
     }
     
   }

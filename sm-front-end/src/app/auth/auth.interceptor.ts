@@ -20,19 +20,19 @@ export class AuthInterceptor implements HttpInterceptor {
     let modifiedRequest = request;
 
     // Se verifica si existe un usuario logueado
-    /*if(!!user) {
+    if(!!user) {
       const token: string = user.token;
       // Se verifica que el token sea valido
-      if(!!token) {*/
+      if(!!token) {
         // Se modifica el request para agregar el header de autorizacion
         modifiedRequest = request.clone({
-            headers: request.headers.append('Authorization', 'Basic ZmFiaWFuOTZAZ21haWwuY29tOjEyMzQ1Ng==').
+            headers: request.headers.append('Authorization', 'Basic ' + user.token).
                       append('Access-Control-Request-Headers', 'accept, origin, authorization').
                       append('Access-Control-Request-Method','GET,PUT,POST,DELETE,PATCH,OPTIONS').
                       append('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,PATCH,OPTIONS')
         });
-      //}
-    //}
+      }
+    }
     return next.handle(modifiedRequest);
   }
 }
