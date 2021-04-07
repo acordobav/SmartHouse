@@ -14,15 +14,10 @@ const RECONNECT_INTERVAL = 500000;
 export class DoorService {
   private _doors = new Subject<Door[]>();
   private socket: WebSocketSubject<any>;
-  private interval;
 
   constructor(private http: HttpClient) {
-    //const subject = webSocket(environment.webSocketURL).subscribe();
-
-    //this.connect({ reconnect: true });
-
-    setInterval(() => this.fetchDoors(), 3000);
-   }
+    this.connect({ reconnect: true });
+  }
 
   get doors(): Observable<Door[]> {
     return this._doors.asObservable();
@@ -36,7 +31,7 @@ export class DoorService {
     );
   }
 
-  /*
+
   private connect(cfg: { reconnect: boolean } = { reconnect: false }) {
     if (!this.socket || this.socket.closed) {
       this.socket = this.getNewWebSocket();
@@ -45,8 +40,7 @@ export class DoorService {
           error: error => console.log(error),
         }), catchError(_ => EMPTY));
       messages.subscribe(
-        (data) => {
-          console.log(data);
+        () => {
           this.fetchDoors();
         }
       );
@@ -64,7 +58,6 @@ export class DoorService {
       url: environment.webSocketURL,
       closeObserver: {
         next: () => {
-          console.log('Connection closed');
           this.socket = undefined;
           this.connect({ reconnect: true });
         }
@@ -72,8 +65,8 @@ export class DoorService {
     });
   }
 
-  private close() {
+  public close() {
     this.socket.complete();
+    this.socket = undefined;
   }
-  */
 }
