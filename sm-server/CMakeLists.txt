@@ -6,15 +6,15 @@ enable_testing()
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -pthread -lwiringPi")
 
 # Find the Pistache library.
-find_package(PkgConfig)
-pkg_check_modules(Pistache REQUIRED IMPORTED_TARGET libpistache)
+set(Pistache_FOUND 1)
+find_package(Pistache 0.0.2 REQUIRED PATHS /opt/pistache)
 
 # Find the RapidJSON library.
-find_package(RapidJSON REQUIRED PATHS /opt/rapidjson)
-include_directories(${RAPIDJSON_INCLUDE_DIRS})
+#find_package(RapidJSON REQUIRED)
+include_directories(/opt/rapidjson/include)
+link_directories(/opt/rapidjson/lib)
 
 # Find the SmartHouse library
-find_package(smarthouse REQUIRED PATHS /opt/smarthouse)
 INCLUDE_DIRECTORIES(/opt/smarthouse/include)
 LINK_DIRECTORIES(/opt/smarthouse/lib)
 
@@ -24,7 +24,7 @@ include_directories( ${Boost_INCLUDE_DIR} )
 
 add_executable(sm-server main.cpp)
 target_link_libraries(${PROJECT_NAME} smarthouse) 
-target_link_libraries(${PROJECT_NAME} PkgConfig::Pistache)
+target_link_libraries(${PROJECT_NAME} pistache_shared)
 target_link_libraries(${PROJECT_NAME} ${Boost_LIBRARIES})
 
 set(CPACK_PROJECT_NAME ${PROJECT_NAME})
