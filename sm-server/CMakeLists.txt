@@ -3,7 +3,7 @@ project(sm-server VERSION 0.1.0)
 
 include(CTest)
 enable_testing()
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -lpthread -lwiringPi")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -lpthread -lsmgpio")
 
 # Find the Pistache library.
 set(Pistache_FOUND 1)
