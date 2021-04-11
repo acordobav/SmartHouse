@@ -402,14 +402,16 @@ class HomeEndpoint
       doc2.Parse(user.c_str());
       string userEmail = doc2["email"].GetString();
       string userPassword = doc2["password"].GetString();
+      string userName = doc2["name"].GetString();
       
       //Se comparan los datos de autenticacion
       if (userEmail == doc["email"].GetString() && userPassword == doc["password"].GetString())
       {
         string token = userEmail + ":" + userPassword;
         string encode = base64_encode((const unsigned char*)token.c_str(), token.length());
+        string strResponse = "{\"token\":\"" + encode + "\",\"name\":\"" + userName + "\"}";
         configReponse(&response);
-        response.send(Http::Code::Ok, encode);
+        response.send(Http::Code::Ok, strResponse);
       }
       else
       {
@@ -546,6 +548,7 @@ void *start_websocketEndpoint(void *input)
     }
     catch(const std::exception& e)
     {
+      cout << e.what() << endl;
       cout << "Se desconecto el cliente" << endl;
     }
   }
