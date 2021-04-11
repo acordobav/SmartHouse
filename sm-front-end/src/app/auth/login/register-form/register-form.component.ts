@@ -31,15 +31,21 @@ export class RegisterFormComponent implements OnInit {
     this.errorMessage = null;
 
     const value = this.registerForm.value;
-    if (this.registerForm.valid) {
-      if (this.checkPasswords(value['password1'], value['password2'])) {
-        
-        
-        this.emitFinishedEvent();
-      }
-    } else {
+    
+    // Checks if the form is valid
+    if (!this.registerForm.valid) {
       this.errorMessage = 'Por favor, ingrese la información solicitada.'
+      return;
     }
+
+    // Checks if the password are equal
+    if (!this.checkPasswords(value['password1'], value['password2'])) 
+      return;
+
+
+    this.emitFinishedEvent();
+      
+      
   }
 
   /**
