@@ -1,5 +1,5 @@
 # Biblioteca SM-Library
-Esta biblioteca tiene el propósito de crear una api que permita a un programa de software acceder al estado actual de las puertas y que permita cambiar el estado de los bombillos. Se utiliza la biblioteca wiringPi para poder controlar los GPIO del raspberry.
+Esta biblioteca tiene el propósito de crear una api que permita a un programa de software acceder al estado actual de las puertas y que permita cambiar el estado de los bombillos. Se utiliza la biblioteca smgpio para poder controlar los GPIO del raspberry.
 
 ## Utilización
 
