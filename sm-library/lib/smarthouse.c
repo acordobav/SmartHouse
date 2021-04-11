@@ -2,12 +2,6 @@
 
 int smhSetup(int switchType)
 {
-  if (wiringPiSetup() < 0)
-  {
-    printf("Unable to setup wiringPi\n");
-    return 1;
-  }
-
   if (switchType != 1 && switchType != 0)
   {
     printf("El tipo de switch debe ser 0 o 1");
@@ -24,12 +18,12 @@ int smhSetup(int switchType)
   pinMode(DINNINGROOM_BULB, OUTPUT);
 
   // Se establece un valor inicial de apagado
-  digitalWrite(KITCHEN_BULB, 0);
-  digitalWrite(LIVINGROOM_BULB, 0);
-  digitalWrite(BATHROOM_BULB, 0);
-  digitalWrite(ROOM1_BULB, 0);
-  digitalWrite(ROOM2_BULB, 0);
-  digitalWrite(DINNINGROOM_BULB, 0);
+  digitalWrite(KITCHEN_BULB, LOW);
+  digitalWrite(LIVINGROOM_BULB, LOW);
+  digitalWrite(BATHROOM_BULB, LOW);
+  digitalWrite(ROOM1_BULB, LOW);
+  digitalWrite(ROOM2_BULB, LOW);
+  digitalWrite(DINNINGROOM_BULB, LOW);
 
   // Estado inicial de las puertas
   setDoorInitialState();
@@ -46,14 +40,14 @@ void setDoorISR(int pin, int switchType, void *interrupt)
 {
   if (switchType == 0) // Switch pulsador
   {
-    if (wiringPiISR(pin, INT_EDGE_RISING, interrupt) < 0)
+    if (gpioISR(pin, INT_EDGE_RISING, interrupt) < 0)
     {
       printf("Unable to setup ISR on Wpi: %d\n", pin);
     }
   }
   else // Switch que mantiene su estado
   {
-    if (wiringPiISR(pin, INT_EDGE_BOTH, interrupt) < 0)
+    if (gpioISR(pin, INT_EDGE_BOTH, interrupt) < 0)
     {
       printf("Unable to setup ISR on Wpi: %d\n", pin);
     }
