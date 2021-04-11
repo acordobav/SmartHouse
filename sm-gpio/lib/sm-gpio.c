@@ -1,4 +1,4 @@
-#include "../include/sm-gpio.h"
+#include "sm-gpio.h"
 
 void exportGpio(int gpio)
 {
