@@ -3,8 +3,11 @@
 Este proyecto utiliza CMake para realizar la compilación del software.
 
 ## Instalacion Curl
+
+```console
 $ sudo apt update
 $ sudo apt-get install libcurl4-openssl-dev
+```
 
 ## Instalacion Pistache
 
@@ -20,8 +23,8 @@ $ sudo apt install libpistache-dev
 
 ```console
 $ git clone https://github.com/oktal/pistache.git
-$ git submodule update --init
 $ cd pistache
+$ git submodule update --init
 $ mkdir -p {build,prefix}
 $ cd build
 $ cmake -G "Unix Makefiles" \
@@ -30,7 +33,7 @@ $ cmake -G "Unix Makefiles" \
     -DPISTACHE_BUILD_TESTS=true \
     -DPISTACHE_BUILD_DOCS=false \
     -DPISTACHE_USE_SSL=true \
-    -DCMAKE_INSTALL_PREFIX=$PWD/../prefix \
+    -DCMAKE_INSTALL_PREFIX=/opt/pistache \
     ../
 $ make -j
 $ make install
@@ -38,9 +41,23 @@ $ make install
 
 ## Instalacion de RapidJson
 
+### Ubuntu
+
 ```console
 $ sudo apt-get update
 $ sudo apt-get install rapidjson-dev
+```
+
+### Building from source
+
+```console
+$ git clone https://github.com/Tencent/rapidjson.git
+$ cd rapidjson
+$ git submodule update --init
+$ mkdir build && cd build
+$ cmake ../ -DCMAKE_INSTALL_PREFIX:PATH=/opt/rapidjson
+$ make
+$ sudo make install
 ```
 
 ## Instalacion de Boost

@@ -3,7 +3,9 @@
 // The list of file replacements can be found in `angular.json`.
 
 export const environment = {
-  production: false
+  production: false,
+  restapiUrl: 'http://192.168.1.200:9082',
+  webSocketURL: 'ws://192.168.1.200:9081',
 };
 
 /*

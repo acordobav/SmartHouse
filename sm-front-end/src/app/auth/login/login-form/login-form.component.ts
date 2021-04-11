@@ -16,7 +16,7 @@ export class LoginFormComponent implements OnInit {
   constructor(
     private router: Router,
     private authService: AuthService,
-    ) { }
+  ) { }
 
   ngOnInit(): void {
     this.initForm();
@@ -32,31 +32,33 @@ export class LoginFormComponent implements OnInit {
   onSubmit() {
     this.errorMessage = null;
 
-    if(this.loginForm.valid) {
+    if (this.loginForm.valid) {
       const value = this.loginForm.value;
       this.authenticateUser(value['email'], value['password']);
-    
+
     } else {
       this.errorMessage = "Por favor, ingrese la información solicitada."
     }
 
   }
-  
-  private authenticateUser(email: string, password: string) {
-    const loginData: LoginData = {email: email, password: password};
-    
-    //this.authService.login(loginData);
-    //.subscribe();
 
-    if(email === "admin@newuser" && password === "password") {
-      this.newUserEvent.emit();
-    } else {
-      this.authService.login(loginData);
-      this.redirectToHome();
-    }
-    
+  private authenticateUser(email: string, password: string) {
+    const loginData: LoginData = { email: email, password: password };
+
+    this.authService.login(loginData).subscribe(
+      (response) => {
+        if (email === "admin@admin" && password === "password") {
+          this.newUserEvent.emit();
+        } else {
+          this.redirectToHome();
+        }
+      },
+      (error) => {
+        this.errorMessage = "Credenciales inválidas.";
+      }
+    );
   }
-  
+
   private redirectToHome() {
     this.router.navigate(['/home']);
   }

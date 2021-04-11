@@ -1,5 +1,6 @@
 import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { AuthService } from '../../auth.service';
 
 @Component({
   selector: 'app-register-form',
@@ -12,7 +13,7 @@ export class RegisterFormComponent implements OnInit {
   public errorMessage: string = null;
   public wrongPasswords: boolean = false;
 
-  constructor() { }
+  constructor(private authService: AuthService) { }
 
   ngOnInit(): void {
     this.initForm();
@@ -31,15 +32,32 @@ export class RegisterFormComponent implements OnInit {
     this.errorMessage = null;
 
     const value = this.registerForm.value;
-    if (this.registerForm.valid) {
-      if (this.checkPasswords(value['password1'], value['password2'])) {
-        
-        
-        this.emitFinishedEvent();
-      }
-    } else {
+    
+    // Checks if the form is valid
+    if (!this.registerForm.valid) {
       this.errorMessage = 'Por favor, ingrese la información solicitada.'
+      return;
     }
+
+    // Checks if the password are equal
+    if (!this.checkPasswords(value['password1'], value['password2'])) 
+      return;
+
+    // HTTP Request
+    this.authService.signup(
+      {
+        email: value['email'],
+        password: value['password1'],
+        name: value['name'],
+      }
+    ).subscribe(
+      () => {
+        this.emitFinishedEvent();
+      },
+      () => {
+        this.errorMessage = "Ha ocurrido un error al comunicarse con el servidor.";
+      }
+    );
   }
 
   /**
