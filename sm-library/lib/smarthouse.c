@@ -17,6 +17,14 @@ int smhSetup(int switchType)
   pinMode(ROOM2_BULB, OUTPUT);
   pinMode(DINNINGROOM_BULB, OUTPUT);
 
+  // Se establecen los pines de las puertas como
+  // pines de entrada
+  pinMode(FRONT_DOOR, INPUT);
+  pinMode(BACK_DOOR, INPUT);
+  pinMode(BATHROOM_DOOR, INPUT);
+  pinMode(ROOM1_DOOR, INPUT);
+  pinMode(ROOM2_DOOR, INPUT);
+
   // Se establece un valor inicial de apagado
   digitalWrite(KITCHEN_BULB, LOW);
   digitalWrite(LIVINGROOM_BULB, LOW);
