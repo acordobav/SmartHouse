@@ -30,6 +30,10 @@ export class AuthService {
     );
   }
 
+  signup(signupData: SignupData) {
+    return this.http.put(environment.restapiUrl + '/user', signupData);
+  }
+
   autoLogin() {
     const user: User = JSON.parse(sessionStorage.getItem('user'));
 
@@ -59,5 +63,11 @@ export interface LoginData {
 
 export interface LoginResponse {
   token: string,
+  name: string,
+}
+
+export interface SignupData {
+  email: string,
+  password: string,
   name: string,
 }
