@@ -224,3 +224,7 @@ void changeBulbState(int bulbId, int newState)
   // Se desbloquea el recurso (lista bombillos)
   pthread_mutex_unlock(&doors_mutex);
 }
+
+void takePhoto() {
+  system("raspistill -o cam.jpg");
+}
