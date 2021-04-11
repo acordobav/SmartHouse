@@ -457,7 +457,8 @@ void *start_smartHouse(void *input)
   while(1)
   {
     int doors [5] = {0};
-    getDoorsStatus(doors);
+    //getDoorsStatus(doors);
+    sleep(2);
     list<Door>::iterator it;
     int i = 0;
     for (it = Home::home->doorList.begin(); it != Home::home->doorList.end(); ++it)
