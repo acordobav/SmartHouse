@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <stdlib.h>
 #include <smgpio.h>
 #include <pthread.h>
 
@@ -14,6 +15,8 @@
 #define ROOM1_BULB 5         // GPIO 5  - PIN 29
 #define ROOM2_BULB 6         // GPIO 6  - PIN 31
 #define DINNINGROOM_BULB 26  // GPIO 26 - PIN 37
+
+#define PHOTO_PATH "cam.jpg"
 
 // 0 -> cocina
 // 1 -> sala
@@ -98,3 +101,8 @@ void getBulbsStatus(int array[BULBS_SIZE]);
  * newState: 0 para apagar, 1 para encender
 **/
 void changeBulbState(int bulbId, int newState);
+
+/**
+ * Funcion para tomar una fotografia
+**/
+void takePhoto();
