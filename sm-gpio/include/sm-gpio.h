@@ -39,14 +39,19 @@ void pinMode(int pin, int mode);
  * Function to write the pin state
  * pin: GPIO number
  * value: HIGH or LOW
-**/ 
+**/
 void digitalWrite(int pin, int value);
 
 /**
  * Function to read the pin state
  * pin: GPIO number
-**/ 
+**/
 int digitalRead(int pin);
+
+/**
+ * Function to get the path to the [name] file of a pin
+**/
+char *getPinFileName(int pin, char *name);
 
 /**
  * Function to get the file descriptor related to a pin
@@ -54,4 +59,4 @@ int digitalRead(int pin);
  * name: filename inside the gpio folder
  * return: file descriptor
 **/
-int openPinFile(int pin, char* name);
+int openPinFile(int pin, char *name);

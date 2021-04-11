@@ -60,7 +60,7 @@ void unexportGpio(int gpio)
     close(fd);
 }
 
-int openPinFile(int pin, char* name) {
+char *getPinFileName(int pin, char *name) {
     // Conversion of the gpio number into string
     char gpio[3];
     sprintf(gpio, "%d", pin);
@@ -79,6 +79,17 @@ int openPinFile(int pin, char* name) {
     strcat(gpioFile, gpioFolderName);
     strcat(gpioFile, name);
 
+    free(gpioFolderName);
+
+    return gpioFile;
+}
+
+int openPinFile(int pin, char *name)
+{
+    // Get the file name 
+    char *gpioFile = getPinFileName(pin, name);
+
+    // Open the file
     int fd = open(gpioFile, O_WRONLY);
     if (fd == -1)
     {
@@ -86,7 +97,6 @@ int openPinFile(int pin, char* name) {
         exit(1);
     }
 
-    free(gpioFolderName);
     free(gpioFile);
 
     return fd;
@@ -128,7 +138,8 @@ void digitalWrite(int pin, int value)
         exit(1);
     }
 
-    if ((value != LOW) && (value != HIGH)) {
+    if ((value != LOW) && (value != HIGH))
+    {
         perror("Pin value must be LOW or HIGH");
         exit(1);
     }
@@ -141,7 +152,8 @@ void digitalWrite(int pin, int value)
     sprintf(svalue, "%d", value);
 
     // Writing the value
-    if (write(fd, svalue, strlen(svalue)) < 0) {
+    if (write(fd, svalue, strlen(svalue)) < 0)
+    {
         perror("Unable to set the pin value");
         exit(1);
     }
@@ -149,11 +161,45 @@ void digitalWrite(int pin, int value)
     close(fd);
 }
 
+int digitalRead(int pin)
+{
+    if ((pin < 0) || (pin > 63))
+    {
+        perror("Pin number must be 0-63");
+        exit(1);
+    }
+
+    // Get the file descriptor of the value file
+    char* gpioFile = getPinFileName(pin, "/value"); 
+    FILE *fd = fopen(gpioFile, "r");
+    free(gpioFile);
+
+    // Reading the value
+    fseek(fd, 0, SEEK_END);
+    long fsize = ftell(fd);
+    fseek(fd, 0, SEEK_SET);
+    char *content = malloc(fsize + 1);
+    if (fread(content, 1, fsize, fd) < 0)
+    {
+        perror("Unable to read the pin value");
+        exit(1);
+    }
+    int value = atoi(content);
+
+    free(content);
+    fclose(fd);
+
+    return value;
+}
+
 int main()
 {
     pinMode(22, OUTPUT);
 
     digitalWrite(22, HIGH);
+
+    int value = digitalRead(22);
+    printf("%d\n", value);
 
     unexportGpio(22);
 
