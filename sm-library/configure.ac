@@ -1,4 +1,4 @@
-AC_INIT([libsmarthouse], [1.0], [arturocv16@gmail.com])
+AC_INIT([libsmarthouse], [1.1], [arturocv16@gmail.com])
 AC_CONFIG_AUX_DIR([build-aux])
 AC_CONFIG_MACRO_DIR([m4])
 AM_INIT_AUTOMAKE([foreign -Wall -Werror])

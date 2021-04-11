@@ -1,19 +1,19 @@
 #include <stdio.h>
-#include <wiringPi.h>
+#include <smgpio.h>
 #include <pthread.h>
 
-#define FRONT_DOOR 1    // GPIO 18 - PIN 12
-#define BACK_DOOR 4     // GPIO 23 - PIN 16
-#define BATHROOM_DOOR 5 // GPIO 24 - PIN 18
-#define ROOM1_DOOR 6    // GPIO 25 - PIN 22
-#define ROOM2_DOOR 27   // GPIO 16 - PIN 36
+#define FRONT_DOOR 18    // GPIO 18 - PIN 12
+#define BACK_DOOR 23     // GPIO 23 - PIN 16
+#define BATHROOM_DOOR 24 // GPIO 24 - PIN 18
+#define ROOM1_DOOR 25    // GPIO 25 - PIN 22
+#define ROOM2_DOOR 16    // GPIO 16 - PIN 36
 
-#define KITCHEN_BULB 0      // GPIO 17 - PIN 11
-#define LIVINGROOM_BULB 2   // GPIO 27 - PIN 13
-#define BATHROOM_BULB 3     // GPIO 22 - PIN 15
-#define ROOM1_BULB 21       // GPIO 5  - PIN 29
-#define ROOM2_BULB 22       // GPIO 6  - PIN 31
-#define DINNINGROOM_BULB 25 // GPIO 26 - PIN 37
+#define KITCHEN_BULB 17      // GPIO 17 - PIN 11
+#define LIVINGROOM_BULB 27   // GPIO 27 - PIN 13
+#define BATHROOM_BULB 22     // GPIO 22 - PIN 15
+#define ROOM1_BULB 5         // GPIO 5  - PIN 29
+#define ROOM2_BULB 6         // GPIO 6  - PIN 31
+#define DINNINGROOM_BULB 26  // GPIO 26 - PIN 37
 
 // 0 -> cocina
 // 1 -> sala
