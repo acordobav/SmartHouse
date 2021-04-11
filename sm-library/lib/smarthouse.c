@@ -37,11 +37,11 @@ int smhSetup(int switchType)
   setDoorInitialState();
 
   // Se configura la interrupcion en los pines de puertas
-  setDoorISR(FRONT_DOOR, switchType, &frontdoorInterrupt);
+  /*setDoorISR(FRONT_DOOR, switchType, &frontdoorInterrupt);
   setDoorISR(BACK_DOOR, switchType, &backdoorInterrupt);
   setDoorISR(BATHROOM_DOOR, switchType, &bathroomdoorInterrupt);
   setDoorISR(ROOM1_DOOR, switchType, &room1doorInterrupt);
-  setDoorISR(ROOM2_DOOR, switchType, &room2doorInterrupt);
+  setDoorISR(ROOM2_DOOR, switchType, &room2doorInterrupt);*/
 }
 
 void setDoorISR(int pin, int switchType, void *interrupt)
