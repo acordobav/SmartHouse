@@ -194,7 +194,6 @@ int digitalRead(int pin)
         exit(1);
     }
 
-    printf("%s\n", value);
     int ivalue = atoi(value);
 
     return ivalue;
@@ -331,29 +330,4 @@ void delay (unsigned int howLong)
   sleeper.tv_nsec = (long)(howLong % 1000) * 1000000 ;
 
   nanosleep (&sleeper, &dummy) ;
-}
-
-void test(void) {
-    printf("Interrupted!\n");
-}
-
-int main()
-{
-    pinMode(22, OUTPUT);
-    pinMode(16, INPUT);
-
-    digitalWrite(22, HIGH);
-
-    int value = digitalRead(22);
-    //printf("%d\n", value);
-
-
-    gpioISR(16, INT_EDGE_RISING, &test);
-
-    sleep(10);
-
-    unexportGpio(16);
-    unexportGpio(22);
-
-    return 0;
 }

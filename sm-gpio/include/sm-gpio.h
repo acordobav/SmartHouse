@@ -2,7 +2,6 @@
 
 #include <errno.h>
 #include <fcntl.h>
-#include <stdio.h>
 #include <stdlib.h>
 #include <sys/stat.h>
 #include <sys/types.h>
@@ -90,5 +89,5 @@ int openPinFile(int pin, char *name);
 
 int waitForInterrupt(int pin, int mS);
 static void *interruptHandler(void *arg);
-int smISR(int pin, int mode, void (*function)(void));
+int gpioISR(int pin, int mode, void (*function)(void));
 void delay (unsigned int howLong);
