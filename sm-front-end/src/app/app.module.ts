@@ -17,6 +17,7 @@ import { LightBulbListComponent } from './home/light-bulb-list/light-bulb-list.c
 import { LightBulbComponent } from './home/light-bulb-list/light-bulb/light-bulb.component';
 import { NavbarComponent } from './home/navbar/navbar.component';
 import { AuthInterceptor } from './auth/auth.interceptor';
+import { CameraComponent } from './home/camera/camera.component';
 
 @NgModule({
   declarations: [
@@ -31,6 +32,7 @@ import { AuthInterceptor } from './auth/auth.interceptor';
     LightBulbListComponent,
     LightBulbComponent,
     NavbarComponent,
+    CameraComponent,
   ],
   imports: [
     BrowserModule,

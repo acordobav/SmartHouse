@@ -1,0 +1,14 @@
+<div class="modal-header mx-1">
+    <div class="h5">{{ location }}</div>
+    <button type="button" class="close" aria-label="Close" (click)="activeModal.dismiss('Cross click')">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+<div class="modal-body">
+    <img *ngIf="!!imagePath" src="{{'data:image/jpg;base64,' + imagePath}}" />
+</div>
+<div class="modal-footer">
+    <div class="col m-1">
+        <button class="btn btn-secondary btn-block" (click)="takePhoto()">Tomar foto</button>
+    </div>
+</div>
