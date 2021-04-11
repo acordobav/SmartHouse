@@ -1,4 +1,4 @@
 AM_CPPFLAGS = -I$(top_srcdir)/include
-bin_PROGRAMS = sm-gpio
-libsm-gpio_SOURCES = main.c
-libsm-gpio_LDADD = $(top_builddir)/lib/libsm-gpio.la -lpthread
+bin_PROGRAMS = smgpio
+libsmgpio_SOURCES = main.c
+libsmgpio_LDADD = $(top_builddir)/lib/libsmgpio.la -lpthread

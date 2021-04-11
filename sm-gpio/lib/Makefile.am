@@ -1,4 +1,4 @@
-lib_LTLIBRARIES = libsm-gpio.la
-include_HEADERS = $(top_srcdir)/include/sm-gpio.h
+lib_LTLIBRARIES = libsmgpio.la
+include_HEADERS = $(top_srcdir)/include/smgpio.h
 AM_CPPFLAGS = -I$(top_srcdir)/include -lpthread
-libsm-gpio_la_SOURCES = sm-gpio.c
+libsmgpio_la_SOURCES = sm-gpio.c

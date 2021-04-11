@@ -1,4 +1,4 @@
-#include <sm-gpio.c>
+#include <smgpio.c>
 
 void test(void) {
     printf("Interrupted!\n");
