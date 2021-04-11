@@ -60,7 +60,8 @@ void unexportGpio(int gpio)
     close(fd);
 }
 
-char *getPinFileName(int pin, char *name) {
+char *getPinFileName(int pin, char *name)
+{
     // Conversion of the gpio number into string
     char gpio[3];
     sprintf(gpio, "%d", pin);
@@ -86,11 +87,11 @@ char *getPinFileName(int pin, char *name) {
 
 int openPinFile(int pin, char *name)
 {
-    // Get the file name 
+    // Get the file name
     char *gpioFile = getPinFileName(pin, name);
 
     // Open the file
-    int fd = open(gpioFile, O_WRONLY);
+    int fd = open(gpioFile, O_RDWR);
     if (fd == -1)
     {
         perror("Unable to open the gpio file");
@@ -145,20 +146,26 @@ void digitalWrite(int pin, int value)
     }
 
     // Get the file descriptor of the value file
-    int fd = openPinFile(pin, "/value");
+    if (sysFds[pin] == -1)
+    {
+        int fd = openPinFile(pin, "/value");
+        sysFds[pin] = fd;
+    }
+    else
+    {
+        lseek(sysFds[pin], 0L, SEEK_SET);
+    }
 
     // Conversion of the value into string
     char svalue[2];
     sprintf(svalue, "%d", value);
 
     // Writing the value
-    if (write(fd, svalue, strlen(svalue)) < 0)
+    if (write(sysFds[pin], svalue, strlen(svalue)) < 0)
     {
         perror("Unable to set the pin value");
         exit(1);
     }
-
-    close(fd);
 }
 
 int digitalRead(int pin)
@@ -170,37 +177,182 @@ int digitalRead(int pin)
     }
 
     // Get the file descriptor of the value file
-    char* gpioFile = getPinFileName(pin, "/value"); 
-    FILE *fd = fopen(gpioFile, "r");
-    free(gpioFile);
+    if (sysFds[pin] == -1)
+    {
+        int fd = openPinFile(pin, "/value");
+        sysFds[pin] = fd;
+    }
+    else
+    {
+        lseek(sysFds[pin], 0L, SEEK_SET);
+    }
 
-    // Reading the value
-    fseek(fd, 0, SEEK_END);
-    long fsize = ftell(fd);
-    fseek(fd, 0, SEEK_SET);
-    char *content = malloc(fsize + 1);
-    if (fread(content, 1, fsize, fd) < 0)
+    char value[1];
+    if (read(sysFds[pin], value, 1) < 0)
     {
         perror("Unable to read the pin value");
         exit(1);
     }
-    int value = atoi(content);
 
-    free(content);
-    fclose(fd);
+    printf("%s\n", value);
+    int ivalue = atoi(value);
 
-    return value;
+    return ivalue;
+}
+
+int gpioISR(int pin, int mode, void (*function)(void))
+{
+    pthread_t threadId;
+    const char *modeS;
+    char fName[64];
+    char pinS[8];
+    pid_t pid;
+    int count, i;
+    char c;
+
+    if ((pin < 0) || (pin > 63))
+    {
+        perror("Pin number must be 0-63");
+        exit(1);
+    }
+
+    if (mode == INT_EDGE_FALLING)
+        modeS = "falling";
+    else if (mode == INT_EDGE_RISING)
+        modeS = "rising";
+    else
+        modeS = "both";
+
+    sprintf(pinS, "%d", pin);
+
+    if ((pid = fork()) < 0)
+    { // Fail
+        perror("ISR fork failed");
+        exit(1);
+    }
+
+    if (pid == 0) // Child, exec
+    {
+        if (access("/usr/local/bin/gpio", X_OK) == 0)
+        {
+            execl("/usr/local/bin/gpio", "gpio", "edge", pinS, modeS, (char *)NULL);
+            perror("ISR execl 1 failed");
+            exit(1);
+        }
+        else if (access("/usr/bin/gpio", X_OK) == 0)
+        {
+            execl("/usr/bin/gpio", "gpio", "edge", pinS, modeS, (char *)NULL);
+            perror("ISR execl 2 failed");
+            exit(1);
+        }
+        else
+        {
+            perror("Can't find gpio program");
+            exit(1);
+        }
+    }
+    else // Parent, wait
+        waitpid(pid, NULL, 0);
+
+    // Get the file descriptor of the value file
+    if (sysFds[pin] == -1)
+    {
+        int fd = openPinFile(pin, "/value");
+        sysFds[pin] = fd;
+    }
+
+    // Clear any initial pending interrupt
+
+    ioctl(sysFds[pin], FIONREAD, &count);
+    for (i = 0; i < count; ++i)
+        read(sysFds[pin], &c, 1);
+
+    isrFunctions[pin] = function;
+
+    pthread_mutex_lock(&pinMutex);
+    pinPass = pin;
+    pthread_create(&threadId, NULL, interruptHandler, NULL);
+    while (pinPass != -1)
+        delay(1);
+    pthread_mutex_unlock(&pinMutex);
+
+    return 0;
+}
+
+static void *interruptHandler(void *arg)
+{
+    int myPin;
+
+    myPin = pinPass;
+    pinPass = -1;
+
+    for (;;)
+        if (waitForInterrupt(myPin, -1) > 0)
+            isrFunctions[myPin]();
+
+    return NULL;
+}
+
+int waitForInterrupt(int pin, int mS)
+{
+    int fd, x;
+    uint8_t c;
+    struct pollfd polls;
+
+    if ((fd = sysFds[pin]) == -1)
+        return -2;
+
+    // Setup poll structure
+
+    polls.fd = fd;
+    polls.events = POLLPRI | POLLERR;
+
+    // Wait for it ...
+
+    x = poll(&polls, 1, mS);
+
+    // If no error, do a dummy read to clear the interrupt
+    //	A one character read appars to be enough.
+
+    if (x > 0)
+    {
+        lseek(fd, 0, SEEK_SET); // Rewind
+        (void)read(fd, &c, 1);  // Read & clear
+    }
+
+    return x;
+}
+
+void delay (unsigned int howLong)
+{
+  struct timespec sleeper, dummy ;
+
+  sleeper.tv_sec  = (time_t)(howLong / 1000) ;
+  sleeper.tv_nsec = (long)(howLong % 1000) * 1000000 ;
+
+  nanosleep (&sleeper, &dummy) ;
+}
+
+void test(void) {
+    printf("Interrupted!\n");
 }
 
 int main()
 {
     pinMode(22, OUTPUT);
+    pinMode(16, INPUT);
 
     digitalWrite(22, HIGH);
 
     int value = digitalRead(22);
-    printf("%d\n", value);
+    //printf("%d\n", value);
 
+
+    gpioISR(16, INT_EDGE_RISING, &test);
+
+    sleep(10);
+
+    unexportGpio(16);
     unexportGpio(22);
 
     return 0;

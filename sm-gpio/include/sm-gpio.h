@@ -9,12 +9,39 @@
 #include <unistd.h>
 
 #include <string.h>
+#include <sys/ioctl.h>
+
+#include <poll.h>
+#include <stdint.h>
+#include <sys/wait.h>
+#include <pthread.h>
 
 #define INPUT 0
 #define OUTPUT 1
 
 #define LOW 0
 #define HIGH 1
+
+#define INT_EDGE_FALLING 0
+#define INT_EDGE_RISING 1
+#define INT_EDGE_BOTH 2
+
+// sysFds:
+//	Map a file descriptor from the /sys/class/gpio/gpioX/value
+static int sysFds [64] =
+{
+  -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
+  -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
+  -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
+  -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
+} ;
+
+// ISR Data
+static void (*isrFunctions [64])(void) ;
+
+static volatile int pinPass = -1 ;
+
+static pthread_mutex_t pinMutex = PTHREAD_MUTEX_INITIALIZER;
 
 /**
  * Function to export a GPIO
@@ -60,3 +87,8 @@ char *getPinFileName(int pin, char *name);
  * return: file descriptor
 **/
 int openPinFile(int pin, char *name);
+
+int waitForInterrupt(int pin, int mS);
+static void *interruptHandler(void *arg);
+int smISR(int pin, int mode, void (*function)(void));
+void delay (unsigned int howLong);
