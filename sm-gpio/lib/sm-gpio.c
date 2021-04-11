@@ -60,9 +60,41 @@ void unexportGpio(int gpio)
     close(fd);
 }
 
+int openPinFile(int pin, char* name) {
+    // Conversion of the gpio number into string
+    char gpio[3];
+    sprintf(gpio, "%d", pin);
+
+    // The gpio folder name is obtained
+    const char *gpioString = "gpio";
+    char *gpioFolderName = malloc(strlen(gpioString) + strlen(gpio) + 1);
+    strcpy(gpioFolderName, gpioString);
+    strcat(gpioFolderName, gpio);
+
+    // The gpio file is obtained
+    const char *path1 = "/sys/class/gpio/";
+    char *gpioFile = malloc(
+        strlen(path1) + strlen(gpioFolderName) + strlen(name) + 1);
+    strcpy(gpioFile, path1);
+    strcat(gpioFile, gpioFolderName);
+    strcat(gpioFile, name);
+
+    int fd = open(gpioFile, O_WRONLY);
+    if (fd == -1)
+    {
+        perror("Unable to open the gpio file");
+        exit(1);
+    }
+
+    free(gpioFolderName);
+    free(gpioFile);
+
+    return fd;
+}
+
 void pinMode(int pin, int mode)
 {
-    // Checks the mode desired for the pin
+    // Checks the desired mode for the pin
     if (mode != INPUT && mode != OUTPUT)
     {
         perror("Pin mode must be INPUT or OUTPUT");
@@ -72,31 +104,8 @@ void pinMode(int pin, int mode)
     // Exports the pin
     exportGpio(pin);
 
-    // Conversion of the gpio number into string
-    char gpio[3];
-    sprintf(gpio, "%d", pin);
-
-    // The gpio file name is obtained
-    const char *gpioString = "gpio";
-    char *gpioFileName = malloc(strlen(gpioString) + strlen(gpio) + 1);
-    strcpy(gpioFileName, gpioString);
-    strcat(gpioFileName, gpio);
-
-    // The gpio file mode is obtained
-    const char *path1 = "/sys/class/gpio/";
-    const char *path2 = "/direction";
-    char *gpioModeFile = malloc(
-        strlen(path1) + strlen(gpioFileName) + strlen(path2) + 1);
-    strcpy(gpioModeFile, path1);
-    strcat(gpioModeFile, gpioFileName);
-    strcat(gpioModeFile, path2);
-
-    int fd = open(gpioModeFile, O_WRONLY);
-    if (fd == -1)
-    {
-        perror("Unable to open gpio mode file");
-        exit(1);
-    }
+    // Get the file descriptor of the mode file
+    int fd = openPinFile(pin, "/direction");
 
     // Writing the pin mode to the file
     char *pinMode = "out";
@@ -108,14 +117,45 @@ void pinMode(int pin, int mode)
         exit(1);
     }
 
-    free(gpioFileName);
-    free(gpioModeFile);
+    close(fd);
+}
+
+void digitalWrite(int pin, int value)
+{
+    if ((pin < 0) || (pin > 63))
+    {
+        perror("Pin number must be 0-63");
+        exit(1);
+    }
+
+    if ((value != LOW) && (value != HIGH)) {
+        perror("Pin value must be LOW or HIGH");
+        exit(1);
+    }
+
+    // Get the file descriptor of the value file
+    int fd = openPinFile(pin, "/value");
+
+    // Conversion of the value into string
+    char svalue[2];
+    sprintf(svalue, "%d", value);
+
+    // Writing the value
+    if (write(fd, svalue, strlen(svalue)) < 0) {
+        perror("Unable to set the pin value");
+        exit(1);
+    }
+
     close(fd);
 }
 
 int main()
 {
     pinMode(22, OUTPUT);
+
+    digitalWrite(22, HIGH);
+
     unexportGpio(22);
+
     return 0;
 }
