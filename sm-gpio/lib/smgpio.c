@@ -8,26 +8,31 @@ void exportGpio(int gpio)
         exit(1);
     }
 
-    // Opening the /sys/class/gpio/export file
-    int fd = open("/sys/class/gpio/export", O_WRONLY);
-    if (fd < 0)
+    // Checks if the gpio was already exported
+    char *pinFolder = getPinFileName(gpio, "");
+    if (!(access(pinFolder, F_OK) == 0))
     {
-        perror("Unable to open /sys/class/gpio/export");
-        exit(1);
+        // Opening the /sys/class/gpio/export file
+        int fd = open("/sys/class/gpio/export", O_WRONLY);
+        if (fd < 0)
+        {
+            perror("Unable to open /sys/class/gpio/export");
+            exit(1);
+        }
+
+        // Conversion of the gpio number into string
+        char pin[3];
+        sprintf(pin, "%d", gpio);
+
+        // Export the pin by writing to /sys/class/gpio/export
+        if (write(fd, pin, strlen(pin)) < 0)
+        {
+            perror("Error writing to /sys/class/gpio/export");
+            exit(1);
+        }
+
+        close(fd);
     }
-
-    // Conversion of the gpio number into string
-    char pin[3];
-    sprintf(pin, "%d", gpio);
-
-    // Export the pin by writing to /sys/class/gpio/export
-    if (write(fd, pin, strlen(pin)) < 0)
-    {
-        perror("Error writing to /sys/class/gpio/export");
-        exit(1);
-    }
-
-    close(fd);
 }
 
 void unexportGpio(int gpio)
@@ -322,12 +327,12 @@ int waitForInterrupt(int pin, int mS)
     return x;
 }
 
-void delay (unsigned int howLong)
+void delay(unsigned int howLong)
 {
-  struct timespec sleeper, dummy ;
+    struct timespec sleeper, dummy;
 
-  sleeper.tv_sec  = (time_t)(howLong / 1000) ;
-  sleeper.tv_nsec = (long)(howLong % 1000) * 1000000 ;
+    sleeper.tv_sec = (time_t)(howLong / 1000);
+    sleeper.tv_nsec = (long)(howLong % 1000) * 1000000;
 
-  nanosleep (&sleeper, &dummy) ;
+    nanosleep(&sleeper, &dummy);
 }
