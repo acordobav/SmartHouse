@@ -49,7 +49,9 @@ class HomeEndpoint
     **/
     explicit HomeEndpoint(Address addr)
       : httpEndpoint(std::make_shared<Http::Endpoint>(addr))
-    { }
+    { 
+      Home::home->camera.last_photo = PHOTO_PATH;
+    }
 
     /**
      * Metodo para declarar el punto final de comunicacion
@@ -228,6 +230,7 @@ class HomeEndpoint
     { 
       int verify = verifyToken(request);
 
+      takePhoto(); // Tomar nueva foto
       string imageName = Home::home->camera.last_photo;
 
       if(verify == 0)

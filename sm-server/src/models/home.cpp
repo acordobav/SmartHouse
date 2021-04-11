@@ -38,7 +38,6 @@ class Home {
             this->doorList = {door1, door2, door3, door4, door5};
 
             this->camera.location = "Jardin";
-            this->camera.last_photo = "jardin.png";
         }
         Home(Home& other){ }
         Home& operator=(Home& other){ }
