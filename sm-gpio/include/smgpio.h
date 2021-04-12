@@ -91,3 +91,6 @@ int waitForInterrupt(int pin, int mS);
 static void *interruptHandler(void *arg);
 int gpioISR(int pin, int mode, void (*function)(void));
 void delay (unsigned int howLong);
+
+
+void setEdge(int pin, int mode);
