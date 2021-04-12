@@ -34,7 +34,7 @@ El identificador es igual a la posición en la lista correspondiente.
 ### Puertas
 | Nombre | ID | GPIO | PIN | 
 | :---: | :---: | :---: | :---: | 
-| Cocina | 0 |  18 | 12 |
+| Delantera | 0 |  18 | 12 |
 | Trasera | 1 | 23 | 16 |
 | Baño | 2 | 24 | 18 |
 | Cuarto 1 | 3 | 25 | 22 |
