@@ -207,10 +207,8 @@ int digitalRead(int pin)
 int gpioISR(int pin, int mode, void (*function)(void))
 {
     pthread_t threadId;
-    const char *modeS;
     char fName[64];
     char pinS[8];
-    pid_t pid;
     int count, i;
     char c;
 
@@ -220,43 +218,8 @@ int gpioISR(int pin, int mode, void (*function)(void))
         exit(1);
     }
 
-    if (mode == INT_EDGE_FALLING)
-        modeS = "falling";
-    else if (mode == INT_EDGE_RISING)
-        modeS = "rising";
-    else
-        modeS = "both";
-
-    sprintf(pinS, "%d", pin);
-
-    if ((pid = fork()) < 0)
-    { // Fail
-        perror("ISR fork failed");
-        exit(1);
-    }
-
-    if (pid == 0) // Child, exec
-    {
-        if (access("/usr/local/bin/gpio", X_OK) == 0)
-        {
-            execl("/usr/local/bin/gpio", "gpio", "edge", pinS, modeS, (char *)NULL);
-            perror("ISR execl 1 failed");
-            exit(1);
-        }
-        else if (access("/usr/bin/gpio", X_OK) == 0)
-        {
-            execl("/usr/bin/gpio", "gpio", "edge", pinS, modeS, (char *)NULL);
-            perror("ISR execl 2 failed");
-            exit(1);
-        }
-        else
-        {
-            perror("Can't find gpio program");
-            exit(1);
-        }
-    }
-    else // Parent, wait
-        waitpid(pid, NULL, 0);
+    // The edge is configured
+    setEdge(pin, mode);
 
     // Get the file descriptor of the value file
     if (sysFds[pin] == -1)
@@ -315,9 +278,6 @@ int waitForInterrupt(int pin, int mS)
 
     x = poll(&polls, 1, mS);
 
-    // If no error, do a dummy read to clear the interrupt
-    //	A one character read appars to be enough.
-
     if (x > 0)
     {
         lseek(fd, 0, SEEK_SET); // Rewind
@@ -336,3 +296,37 @@ void delay(unsigned int howLong)
 
     nanosleep(&sleeper, &dummy);
 }
+
+void setEdge(int pin, int mode)
+{
+    if ((pin < 0) || (pin > 63))
+    {
+        perror("Pin number must be 0-63");
+        exit(1);
+    }
+
+    if ((mode != INT_EDGE_BOTH) &&
+        (mode != INT_EDGE_RISING) &&
+        (mode != INT_EDGE_FALLING))
+    {
+        perror("Invalid mode: Edge should be rising, falling or both");
+        exit(1);
+    }
+
+    // The edge file is obtained
+    int fd = openPinFile(pin, "/edge");
+
+    // Writing the edge value
+    char* smode = "none\n";
+    if(mode == INT_EDGE_FALLING) smode = "falling\n";
+    else if(mode == INT_EDGE_RISING) smode = "rising\n";
+    else if(mode == INT_EDGE_BOTH) smode = "both\n";
+
+    if (write(fd, smode, strlen(smode)) < 0)
+    {
+        perror("Unable to set the edge value");
+        exit(1);
+    }
+
+    close(fd);
+}   
