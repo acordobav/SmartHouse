@@ -226,5 +226,5 @@ void changeBulbState(int bulbId, int newState)
 }
 
 void takePhoto() {
-  system("raspistill -o cam.jpg");
+  system("raspistill -q 5 -o cam.jpg");
 }

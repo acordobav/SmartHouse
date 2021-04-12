@@ -16,7 +16,7 @@
 #define ROOM2_BULB 6         // GPIO 6  - PIN 31
 #define DINNINGROOM_BULB 26  // GPIO 26 - PIN 37
 
-#define PHOTO_PATH "cam.jpg"
+#define PHOTO_PATH "/home/root/cam.jpg"
 
 // 0 -> cocina
 // 1 -> sala
